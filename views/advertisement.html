@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    $(function(){
+        window.setInterval(sendAdvertisement, 1000*100);
+
+        // 根据下拉判断是否显示隐藏导航
+        $(window).scroll(function(){
+            if($(window).scrollTop()>116){
+                // 当满足条件时就显示出右侧的信息栏
+                $("#sidebar").show();
+            }else{
+                // 当条件不满足的时候就隐藏右侧的信息栏
+                $("#sidebar").hide();
+                $('#sidebar_span').hide();
+            }
+        });
+
+        $("#sidebar").click(function () {
+            $('#sidebar_span').show();
+        });
+    })
+
+    var i = 0;
+    function sendAdvertisement() {
+        i ++;
+        if(i > 1){
+            $("#advertisement").show();
+        }
+    }
+</script>
+
+<div id="advertisement" style="width: 300px;height: 80%;background: green;position: fixed;top:10%;right: 0;z-index: 9999;opacity:0.9;display: none;">
+    <a href="#" class="am-close am-close-spin" style="position: absolute;right: 8px;top: 8px;"
+       onclick="$(this).parent().hide();">&times;</a>
+    AAAAAAAAAAAAAAa
+</div>
+
+
