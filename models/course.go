@@ -4,6 +4,13 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+type CourseVedio struct {
+	Id					int
+	Course
+	first_play			string	`第一播放位置`
+	second_play			string  `第二播放位置`
+}
+
 type Course struct {
 	Id          		int
 	CourseName    		string	`课程名称`

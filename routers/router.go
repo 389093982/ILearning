@@ -12,4 +12,5 @@ func init() {
 	beego.Router("/user/login",&controllers.UserController{},"get,post:Login")
 	beego.Router("/course/index",&controllers.CourseController{},"get,post:Index")
 	beego.Router("/course/queryCourse",&controllers.CourseController{},"get,post:QueryCourse")
+	beego.Router("/course/play",&controllers.CourseController{},"get,post:Play")
 }

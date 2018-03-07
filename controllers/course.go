@@ -13,6 +13,11 @@ type CourseController struct {
 	beego.Controller
 }
 
+func (this *CourseController) Play() {
+	// 视频播放
+	this.TplName = "course_play.html"
+}
+
 func (this *CourseController) Index() {
 	this.Data["ExpandExcCrse"] = this.GetString("expandExcCrse", "false")
 	this.TplName = "course.html"

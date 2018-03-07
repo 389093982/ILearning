@@ -1,0 +1,27 @@
+<html>
+<link rel="stylesheet" href="/static/css/initial.css"/>
+<head>
+    <title>课程播放</title>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" href="/static/common/AmazeUI-2.7.2/assets/css/amazeui.css">
+<link rel="stylesheet" href="/static/common/AmazeUI-2.7.2/assets/css/app.css">
+<link rel="stylesheet" href="/static/common/bootstrap-3.3.7-dist/css/bootstrap.css"/>
+<script src="/static/common/jquery-1.11.3.min.js"></script>
+<script src="/static/common/AmazeUI-2.7.2/assets/js/amazeui.js"></script>
+<script src="/static/common/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<body>
+    {{template "header.html"}}
+
+    <div style="width: 88%; height: 88%; margin: 0 auto;">
+        <video width="100%" height="100%" controls>
+            <source src="/static/vedio/mov_bbb.mp4" type="video/mp4">
+            <source src="/static/vedio/mov_bbb.ogg" type="video/ogg">
+            您的浏览器不支持Video标签。
+        </video>
+    </div>
+
+    {{template "footer.html"}}
+    {{template "rightmenu.html"}}
+</body>
+</html>
