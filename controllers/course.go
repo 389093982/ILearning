@@ -36,7 +36,6 @@ func (this *CourseController) QueryCourse() {
 		data["paginator"] = util.Paginator(paginator.Page(),paginator.PerPageNums,paginator.Nums())
 	}
 	//序列化
-	fmt.Print(data)
 	json_obj, err := json.Marshal(data)
 	if err == nil {
 		this.Data["json"] = string(json_obj)

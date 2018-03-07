@@ -5,12 +5,12 @@ $(function () {
 });
 
 function bindPopoverEvent() {
-    $('#_vedio li').each(function (index) {
+    $('#vedio li').each(function (index) {
         $(this).webuiPopover({
             title:function () {
                 var courses = $(document).data("courses");
                 for(var i=0; i<courses.length; i++){
-                    if (courses[i].Id == $('#_vedio li:eq(' + index + ')').attr("course-id")){
+                    if (courses[i].Id == $('#vedio li:eq(' + index + ')').attr("course-id")){
                         var course = courses[i];
                         return course.CourseName
                             + "<span style='margin-left: 10px;' class='star' score='" + course.Score + "'></span>"
@@ -22,10 +22,15 @@ function bindPopoverEvent() {
             content:function () {
                 var courses = $(document).data("courses");
                 for(var i=0; i<courses.length; i++){
-                    if (courses[i].Id == $('#_vedio li:eq(' + index + ')').attr("course-id")){
+                    if (courses[i].Id == $('#vedio li:eq(' + index + ')').attr("course-id")){
                         var course = courses[i];
-                        return "<ul><li>更新至：20集全</li><li>类型：编程语言</li><li>作者：张凡</li><li>简介：" + course.CourseShortDes + "</li>" +
-                            "<li>" + renderNumber(22) + "</li></ul>";
+                        return "<ul><li>"
+                            + course.CourseStatus + "："
+                            + course.CourseNumber + "集</li><li>类型：<span class='coursetype'>"
+                            + course.CourseType + "</span></li><li>作者：<span class='courseauthor'>"
+                            + course.CourseAuthor + "</span></li><li>简介：<span class='courseshortdes'>"
+                            + course.CourseShortDes + "</span></li><li>"
+                            + renderNumber(course.CourseNumber) + "</li></ul>";
                     }
                 }
                 return "";
@@ -35,7 +40,7 @@ function bindPopoverEvent() {
                 return (index + 1) % 5 == 4 || (index + 1) % 5 == 0 ? "left-bottom" : "right-bottom";
             },
             width:400,
-            height:350,
+            height:300,
             delay:100,
             onShow: function($element) {
                 $element.find('.star').raty({
@@ -69,12 +74,13 @@ function loadCourse() {
             var html = "";
             for(var i=0; i<courses.length; i++){
                 var course = courses[i];
-                html += "<li style='height:200px;width: 220px;float: left;padding: 10px;' course-id='" + course.Id +"'><img src='" +
-                    course.SmallImage + "' style='width: 100%;height: 70%;' /><dl style='margin-top: 10px;'><dt>" +
-                    course.CourseName + "</dt><dd>" + course.CourseShortDes + "</dd></dl></li>";
+                html += "<li course-id='" + course.Id +"'>"
+                    + "<a href='#'><img src='" + course.SmallImage + "'/></a>"
+                    + "<dl><dt><a href='#'>" + course.CourseName + "</a></dt>"
+                    + "<dd>" + course.CourseShortDes + "</dd></dl></li>";
             }
             // 拼接 html
-            $("#_vedio ul").html(html);
+            $("#vedio ul").html(html);
             // 缓存数据在 document 上面
             $(document).data("courses", courses);
             // 绑定 popover 事件

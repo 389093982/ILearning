@@ -14,7 +14,7 @@
 <script src="/static/common/jquery_popover/dist/jquery.webui-popover.js"></script>
 <script language="javascript" type="text/javascript" src="/static/common/raty-2.8.0/lib/jquery.raty.js"></script>
 <link href="/static/common/tabfolder/style/common.css" rel="stylesheet" type="text/css">
-<link href="/static/common/tabfolder/style/style.css" rel="stylesheet" type="text/css">
+<link href="/static/css/course/course.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/static/common/tabfolder/js/tab.js"></script>
 <script src="/static/js/course/course.js"></script>
 <body>
@@ -22,29 +22,24 @@
     <div id="nav">
         {{template "search.html"}}
     </div>
-    <div id="content" style="width: 100%;">
-        <div id="section">
-            <div style="width: 88%;min-height: 800px;margin: 20px auto;">
-                <div style="height: 30px;">
-                    <ul style="float: right;list-style: none;display: block;">
-                        <li style="float: right;display: list-item;width:60px;line-height: 30px;">
-                            <a href="#" style="color: green;float: right;">评分</a>
-                        </li>
-                        <li style="float: right;display: list-item;width:60px;line-height: 30px;">
-                            <a href="#" style="color: green;float: right;">播放量</a>
-                        </li>
-                        <li style="float: right;display: list-item;width:60px;line-height: 30px;">
-                            <a href="#" style="color: green;float: right;">更新时间</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div id="_content" style="width: 100%;height:100%;float: left;border: 1px solid #ccc;border-radius: 4px;">
-                    <div id="_vedio"><ul></ul></div>
-                </div>
-
+    <div id="vedioOuter">
+            <div id="vedioOrder">
+                <ul>
+                    <li>
+                        <a href="#">评分</a>
+                    </li>
+                    <li>
+                        <a href="#">播放量</a>
+                    </li>
+                    <li>
+                        <a href="#">更新时间</a>
+                    </li>
+                </ul>
             </div>
-        </div>
+
+            <div id="vedioArea">
+                <div id="vedio"><ul></ul></div>
+            </div>
     </div>
     {{template "footer.html"}}
     {{template "rightmenu.html"}}

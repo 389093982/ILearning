@@ -6,12 +6,15 @@ import (
 
 type Course struct {
 	Id          		int
-	CourseName    		string
-	CourseAuthor		string
-	CourseType			string
-	CourseShortDes		string
-	SmallImage			string
-	Score				float32
+	CourseName    		string	`课程名称`
+	CourseAuthor		string	`课程作者`
+	CourseType			string	`课程内容类型`
+	CourseShortDes		string	`课程简介`
+	SmallImage			string	`课程小图标`
+	Score				float32	`课程得分`
+	CourseNumber		int		`课程集数`
+	CourseStatus		string	`课程更新状态`
+	MediaType			string 	`课程媒体类型`
 }
 
 func QueryCourse(condArr map[string]string, page int, offset int) (courses []Course, counts int64, err error) {
