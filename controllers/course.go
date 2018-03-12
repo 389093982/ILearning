@@ -13,6 +13,18 @@ type CourseController struct {
 	beego.Controller
 }
 
+func (this *CourseController) NewCourse()  {
+	// 课程管理界面
+	this.Layout = "course/home_manage.html"
+	this.TplName = "course/new_course.html"
+}
+
+func (this *CourseController) HomeManage()  {
+	// 课程管理界面
+	this.Layout = "course/home_manage.html"
+	this.TplName = "course/home_manage_default.html"
+}
+
 func (this *CourseController) Play() {
 	// 视频播放
 	this.TplName = "course_play.html"

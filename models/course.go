@@ -4,24 +4,27 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-type CourseVedio struct {
-	Id					int
-	Course
-	first_play			string	`第一播放位置`
-	second_play			string  `第二播放位置`
+type Course struct {
+	Id          		int		`json:"id"`
+	CourseName    		string	`json:"course_name"`		// 课程名称
+	CourseAuthor		string	`json:"course_author"`		// 课程作者
+	CourseType			string	`json:"course_type"`		// 课程内容类型
+	CourseShortDes		string	`json:"course_short_desc"`	// 课程简介
+	SmallImage			string	`json:"small_image"`		// 课程小图标
+	Score				float32	`json:"score"`				// 课程得分
+	CourseNumber		int		`json:"course_number"`		// 课程集数
+	CourseStatus		string	`json:"course_status"`		// 课程更新状态
+	MediaType			string	`json:"media_type"` 		// 课程媒体类型
 }
 
-type Course struct {
-	Id          		int
-	CourseName    		string	`课程名称`
-	CourseAuthor		string	`课程作者`
-	CourseType			string	`课程内容类型`
-	CourseShortDes		string	`课程简介`
-	SmallImage			string	`课程小图标`
-	Score				float32	`课程得分`
-	CourseNumber		int		`课程集数`
-	CourseStatus		string	`课程更新状态`
-	MediaType			string 	`课程媒体类型`
+type CourseVedio struct {
+	Id					int
+	Course				*Course	`orm:"rel(fk)"`
+	VedioName			string	// 视频名称
+	CourseName			string	// 视频对应的课程名称
+	VedioNumber			int		// 视频集数编号
+	FirstPlay			string	// 第一存储/播放位置
+	SecondPlay			string  // 第二存储/播放位置
 }
 
 func QueryCourse(condArr map[string]string, page int, offset int) (courses []Course, counts int64, err error) {

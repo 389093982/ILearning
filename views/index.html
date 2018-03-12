@@ -17,26 +17,6 @@
         border: 1px solid #d0cdd2;
     }
 </style>
-<script type="text/javascript">
-    $(function(){
-        // 根据下拉判断是否显示隐藏导航
-        $(window).scroll(function(){
-            if($(window).scrollTop()>116){
-                // 当满足条件时就显示出右侧的信息栏
-                $("#sidebar").show();
-            }else{
-                // 当条件不满足的时候就隐藏右侧的信息栏
-                $("#sidebar").hide();
-                $('#sidebar_span').hide();
-            }
-        });
-
-        $("#sidebar").click(function () {
-            $('#sidebar_span').show();
-        });
-    })
-
-</script>
 <body>
     {{template "header.html"}}
 
@@ -227,7 +207,7 @@
                                 {{template "teacher_qualification_guidance.html"}}
                             </div>
                             <p>
-                                已有开课认证资格，<a style="color: red;" href="#">立即开课</a>
+                                已有开课认证资格，<a style="color: red;" href="/course/homemanage">立即开课</a>
                             </p>
                         </div>
                     </div>

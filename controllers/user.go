@@ -10,6 +10,11 @@ type UserController struct {
 	beego.Controller
 }
 
+func (this *UserController) Logout()  {
+	this.DelSession("username")
+	this.Redirect("/user/login", 302)
+}
+
 func (this *UserController) Regist()  {
 	Method := this.Ctx.Request.Method
 	if Method == "GET"{
@@ -17,8 +22,8 @@ func (this *UserController) Regist()  {
 	}else{
 		var user models.User
 		inputs := this.Input()
-		user.Username = inputs.Get("username")
-		user.Passwd = inputs.Get("passwd")
+		user.UserName = inputs.Get("username")
+		user.PassWd = inputs.Get("passwd")
 
 		err := models.SaveUser(user)
 
@@ -57,6 +62,8 @@ func (this *UserController) Login()  {
 
 		if err == nil && &user != nil{
 			data["Status"] = "SUCCESS"
+			// 将用户名添加到 session 中去
+			this.SetSession("UserName",user.UserName)
 		}else{
 			data["Status"] = "ERROR"
 			data["ErrorCode"] = err.Error()

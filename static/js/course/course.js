@@ -10,11 +10,11 @@ function bindPopoverEvent() {
             title:function () {
                 var courses = $(document).data("courses");
                 for(var i=0; i<courses.length; i++){
-                    if (courses[i].Id == $('#vedio li:eq(' + index + ')').attr("course-id")){
+                    if (courses[i].id == $('#vedio li:eq(' + index + ')').attr("course-id")){
                         var course = courses[i];
-                        return course.CourseName
-                            + "<span style='margin-left: 10px;' class='star' score='" + course.Score + "'></span>"
-                            + "<span style='float: right;color: red;'>" + course.Score +"分</span>";
+                        return course.course_name
+                            + "<span style='margin-left: 10px;' class='star' score='" + course.score + "'></span>"
+                            + "<span style='float: right;color: red;'>" + course.score +"分</span>";
                     }
                 }
                 return "";
@@ -22,15 +22,15 @@ function bindPopoverEvent() {
             content:function () {
                 var courses = $(document).data("courses");
                 for(var i=0; i<courses.length; i++){
-                    if (courses[i].Id == $('#vedio li:eq(' + index + ')').attr("course-id")){
+                    if (courses[i].id == $('#vedio li:eq(' + index + ')').attr("course-id")){
                         var course = courses[i];
                         return "<ul><li>"
-                            + course.CourseStatus + "："
-                            + course.CourseNumber + "集</li><li>类型：<span class='coursetype'>"
-                            + course.CourseType + "</span></li><li>作者：<span class='courseauthor'>"
-                            + course.CourseAuthor + "</span></li><li>简介：<span class='courseshortdes'>"
-                            + course.CourseShortDes + "</span></li><li>"
-                            + renderNumber(course.CourseNumber) + "</li></ul>";
+                            + course.course_status + "："
+                            + course.course_number + "集</li><li>类型：<span class='coursetype'>"
+                            + course.course_type + "</span></li><li>作者：<span class='courseauthor'>"
+                            + course.course_author + "</span></li><li>简介：<span class='courseshortdes'>"
+                            + course.course_short_desc + "</span></li><li>"
+                            + renderNumber(course.course_number) + "</li></ul>";
                     }
                 }
                 return "";
@@ -74,10 +74,10 @@ function loadCourse() {
             var html = "";
             for(var i=0; i<courses.length; i++){
                 var course = courses[i];
-                html += "<li course-id='" + course.Id +"'>"
-                    + "<a href='#'><img src='" + course.SmallImage + "'/></a>"
-                    + "<dl><dt><a href='#'>" + course.CourseName + "</a></dt>"
-                    + "<dd>" + course.CourseShortDes + "</dd></dl></li>";
+                html += "<li course-id='" + course.id +"'>"
+                    + "<a href='#'><img src='" + course.small_image + "'/></a>"
+                    + "<dl><dt><a href='#'>" + course.course_name + "</a></dt>"
+                    + "<dd>" + course.course_short_desc + "</dd></dl></li>";
             }
             // 拼接 html
             $("#vedio ul").html(html);
