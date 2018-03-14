@@ -16,4 +16,5 @@ func init() {
 	beego.Router("/course/play",&controllers.CourseController{},"get,post:Play")
 	beego.Router("/course/homemanage",&controllers.CourseController{},"get,post:HomeManage")
 	beego.Router("/course/newcourse",&controllers.CourseController{},"get,post:NewCourse")
+	beego.Router("/course/queryCourseExist",&controllers.CourseController{},"get,post:QueryCourseExist")
 }

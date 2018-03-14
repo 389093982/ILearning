@@ -7,10 +7,35 @@ import (
 	"encoding/json"
 	"fmt"
 	"ILearning/ileaning/util"
+	"strings"
 )
 
 type CourseController struct {
 	beego.Controller
+}
+
+func (this *CourseController) QueryCourseExist()  {
+	//初始化
+	data := make(map[string]interface{}, 1)
+	course_name := this.GetString("course_name","")
+	if strings.TrimSpace(course_name) != ""{
+		count, err := models.QueryCourseExist(course_name)
+		if err == nil && count == 0{
+			data["flag"] = false
+		}else{
+			data["flag"] = true
+		}
+	}else{
+		data["flag"] = true
+	}
+	//序列化
+	json_obj, err := json.Marshal(data)
+	if err == nil {
+		this.Data["json"] = string(json_obj)
+	} else {
+		fmt.Print(err.Error())
+	}
+	this.ServeJSON()
 }
 
 func (this *CourseController) NewCourse()  {

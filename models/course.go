@@ -27,6 +27,12 @@ type CourseVedio struct {
 	SecondPlay			string  // 第二存储/播放位置
 }
 
+func QueryCourseExist(course_name string) (count int64, err error)  {
+	o := orm.NewOrm()
+	count, err = o.QueryTable("course").Filter("course_name", course_name).Count()
+	return
+}
+
 func QueryCourse(condArr map[string]string, page int, offset int) (courses []Course, counts int64, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("course")
