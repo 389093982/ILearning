@@ -25,7 +25,7 @@ $.extend(validatePrompt, {
             badFormat:"课程子类型名称格式不正确,含有非法字符"
         }
     },
-    sourse_short_desc:{
+    course_short_desc:{
         onFocus:"请不要使用特殊字符",
         succeed:"",
         isNull:"请输入课程简介信息",
@@ -95,7 +95,7 @@ $.extend(validateFunction, {
             validateSettings.succeed.run(option);
         }
     },
-    sourse_short_desc:function (option) {
+    course_short_desc:function (option) {
         var length = validateRules.betweenLength($.trim(option.value), 1, 50);
         var format = validateRules.normalWithEmpty($.trim(option.value));
         if (!length) {
@@ -110,8 +110,8 @@ $.extend(validateFunction, {
         $("#course_name").ilearningValidate(validatePrompt.course_name, validateFunction.course_name, true);
         $("#course_type").ilearningValidate(validatePrompt.course_type, validateFunction.course_type, true);
         $("#course_sub_type").ilearningValidate(validatePrompt.course_sub_type, validateFunction.course_sub_type, true);
-        $("#sourse_short_desc").ilearningValidate(validatePrompt.sourse_short_desc, validateFunction.sourse_short_desc, true);
-        return validateFunction.FORM_submit(["#course_name","#course_sub_type","#sourse_short_desc","#course_type"]);
+        $("#course_short_desc").ilearningValidate(validatePrompt.course_short_desc, validateFunction.course_short_desc, true);
+        return validateFunction.FORM_submit(["#course_name","#course_sub_type","#course_short_desc","#course_type"]);
     }
 });
 
@@ -128,7 +128,7 @@ $(function () {
     // course_sub_type 验证
     $("#course_sub_type").ilearningValidate(validatePrompt.course_sub_type, validateFunction.course_sub_type);
     // sourse_short_desc 验证
-    $("#sourse_short_desc").ilearningValidate(validatePrompt.sourse_short_desc, validateFunction.sourse_short_desc);
+    $("#course_short_desc").ilearningValidate(validatePrompt.course_short_desc, validateFunction.course_short_desc);
 
     //表单提交验证和服务器请求
     $("#registsubmit").click(function() {
@@ -139,9 +139,12 @@ $(function () {
                 type: "POST",
                 url: "/course/newcourse/add",
                 data: $("#formpersonal").serialize(),
-                success: function(result) {
-                    if (result == 1) {
-                        window.location = "/course/index";
+                success: function(data) {
+                    var obj = JSON.parse(data);
+                    if (obj.status == "SUCCESS") {
+                        window.location = "/course/courselist";
+                    }else{
+                        $("#course_short_desc_error").removeClass().addClass("error").html(obj.msg);
                     }
                 }
             });

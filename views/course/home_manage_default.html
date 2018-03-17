@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<script type="text/javascript" src="/static/module/homemanage/default/flydream/js/bodymovin.js"></script>
+<script type="text/javascript" src="/static/module/homemanage/default/flydream/js/data.js"></script>
 
-</body>
-</html>
+<link rel="stylesheet" href="/static/module/homemanage/default/toggle_message/css/style.css">
+<script src="/static/module/homemanage/default/toggle_message/js/index.js"></script>
+
+<style>
+    #svgContainer {
+        width: 50%;
+        height: 50%;
+        background-color: white;
+        margin: 10px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        var svgContainer = document.getElementById('svgContainer');
+        var animItem = bodymovin.loadAnimation({
+            wrapper: svgContainer,
+            animType: 'svg',
+            loop: true,
+            animationData: JSON.parse(animationData)
+        });
+    });
+</script>
+
+<div id="svgContainer"></div>
+
+<div class="slogan slogan1" style="margin: 20px;" data-text="2018年,先定一个能达到的小目标,比方说挣它一个亿"></div>
+
+<div class="slogan slogan2" style="margin: 20px;" data-text="再累在忙不要忘了学习"></div>
+

@@ -8,7 +8,8 @@ type Course struct {
 	Id          		int		`json:"id"`
 	CourseName    		string	`json:"course_name"`		// 课程名称
 	CourseAuthor		string	`json:"course_author"`		// 课程作者
-	CourseType			string	`json:"course_type"`		// 课程内容类型
+	CourseType			string	`json:"course_type"`		// 课程内容类别
+	CourseSubType		string 	`json:"course_sub_type"`	// 课程内容子类别
 	CourseShortDes		string	`json:"course_short_desc"`	// 课程简介
 	SmallImage			string	`json:"small_image"`		// 课程小图标
 	Score				float32	`json:"score"`				// 课程得分
@@ -27,6 +28,12 @@ type CourseVedio struct {
 	SecondPlay			string  // 第二存储/播放位置
 }
 
+func AddNewCourse(course *Course) (int64, error) {
+	o := orm.NewOrm()
+	id, err := o.Insert(course)
+	return  id, err
+}
+
 func QueryCourseExist(course_name string) (count int64, err error)  {
 	o := orm.NewOrm()
 	count, err = o.QueryTable("course").Filter("course_name", course_name).Count()
@@ -38,12 +45,9 @@ func QueryCourse(condArr map[string]string, page int, offset int) (courses []Cou
 	qs := o.QueryTable("course")
 	cond := orm.NewCondition()
 
-	if condArr["title"] != "" {
-		cond = cond.And("title__icontains", condArr["title"])
+	if _,ok:=condArr["CourseAuthor"];ok{
+		cond = cond.And("CourseAuthor", condArr["CourseAuthor"])
 		//.Filter("username",user.Username).Where(where).Limit(strconv.Itoa(p.Offset()), strconv.Itoa(pagesize)).Order(`op.id desc`).Select()
-	}
-	if condArr["keywords"] != "" {
-		cond = cond.Or("keywords__icontains", condArr["keywords"])
 	}
 
 	qs = qs.SetCond(cond)
