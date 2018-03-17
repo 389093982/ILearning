@@ -15,55 +15,6 @@
     }
 </style>
 
-<div id="course_list">
-    <div v-cloak v-for="course in courses" style="border-bottom: 1px solid #b6acb7;padding: 15px;">
-        <article>
-            <header>
-                <h4 style="color: #0e97dc;">课程名称：[[ course.course_name ]]
-                    <span style="float: right;color: red;">10分</span><div class="star" style="float: right;"></div>
-                </h4>
-                <div style="clear:both;"></div>
-            </header>
-        </article>
-        <section>
-            <div style="float: left; margin-top:10px;">
-                <img src="/static/common/imgscanner/img/1.jpg" height="150" width="200" /><br>
-                <a href="javascript:;" style="color: green;" class="md-trigger" :data-modal="'changeImage_' + course.id">换张图片</a>
-            </div>
-            <div style="float: left;padding-left: 150px;">
-                <p style="color:#f55e13;font-family: Arial;font-weight: 700;font-size: 16px;">浏览量：0</p>
-            </div>
-            <div style="float: left;margin-left: 200px;">
-                <p>课程作者：[[ course.course_author ]]</p>
-                <p>课程内容类别：[[ course.course_type ]]</p>
-                <p>课程内容子类别：[[ course.course_sub_type ]]</p>
-                <p>课程简介：[[ course.course_short_desc ]]</p>
-                <p>课程小图标：[[ course.small_image ]]</p>
-                <p>课程得分：[[ course.score ]]</p>
-                <p>课程集数：[[ course.course_number ]]</p>
-                <p>课程更新状态：[[ course.course_status ]]</p>
-            </div>
-            <div style="clear:both;"></div>
-        </section>
-
-        <!-- bootstrap模态框弹出效果,换张图片弹出 div -->
-        <!-- 使用了 vue 的 v-bind 特性绑定属性 -->
-        <div class="md-modal md-effect-1" :id="'changeImage_' + course.id">
-            <div class="md-content" style="height: 400px;">
-                <a href="#" class="md-close" style="float: right;margin: 10px;">X</a>
-                <h3>上传/更新图片</h3>
-                <div>
-                    <img class="changeImage" :src=" course.small_image " width="200px" height="150px">
-                    <input id="changeImageFile" type="file" name="changeImageFile" style="margin-top: 100px;"/>
-                    <a href="javascript:;" :onclick="'changeImage(' + course.id + ')'">提交</a>
-                </div>
-
-            </div>
-        </div>
-        <div class="md-overlay"></div>
-    </div>
-</div>
-
 <script>
     // html5 实现图片预览功能
     $(function () {
@@ -107,4 +58,55 @@
         });
     }
 </script>
+
+<div id="course_list">
+    <div v-cloak v-for="course in courses" style="border-bottom: 1px solid #b6acb7;padding: 15px;">
+        <article>
+            <header>
+                <h4 style="color: #0e97dc;">课程名称：[[ course.course_name ]]
+                    <span style="float: right;color: red;">10分</span><div class="star" style="float: right;"></div>
+                </h4>
+                <div style="clear:both;"></div>
+            </header>
+        </article>
+        <section>
+            <div style="float: left; margin-top:10px;">
+                <img :src="' course.small_image '" height="150" width="200" onerror="javascript:this.src='/static/img/a.png';"/><br>
+                <a href="javascript:;" style="color: green;" class="md-trigger" :data-modal="'changeImage_' + course.id">换张图片</a>
+            </div>
+            <div style="float: left;padding-left: 150px;">
+                <p style="color:#f55e13;font-family: Arial;font-weight: 700;font-size: 16px;">浏览量：0</p>
+            </div>
+            <div style="float: left;margin-left: 200px;">
+                <p>课程作者：[[ course.course_author ]]</p>
+                <p>课程内容类别：[[ course.course_type ]]</p>
+                <p>课程内容子类别：[[ course.course_sub_type ]]</p>
+                <p>课程简介：[[ course.course_short_desc ]]</p>
+                <p>课程小图标：[[ course.small_image ]]</p>
+                <p>课程得分：[[ course.score ]]</p>
+                <p>课程集数：[[ course.course_number ]]</p>
+                <p>课程更新状态：[[ course.course_status ]]</p>
+            </div>
+            <div style="clear:both;"></div>
+        </section>
+
+        <!-- bootstrap模态框弹出效果,换张图片弹出 div -->
+        <!-- 使用了 vue 的 v-bind 特性绑定属性 -->
+        <div class="md-modal md-effect-1" :id="'changeImage_' + course.id">
+            <div class="md-content" style="height: 400px;">
+                <a href="#" class="md-close" style="float: right;margin: 10px;">X</a>
+                <h3>上传/更新图片</h3>
+                <div>
+                    <img class="changeImage" :src=" course.small_image " width="200px" height="150px">
+                    <input id="changeImageFile" type="file" name="changeImageFile" style="margin-top: 100px;"/>
+                    <a href="javascript:;" :onclick="'changeImage(' + course.id + ')'">提交</a>
+                </div>
+
+            </div>
+        </div>
+        <div class="md-overlay"></div>
+    </div>
+</div>
+
+
 

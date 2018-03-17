@@ -28,6 +28,19 @@ type CourseVedio struct {
 	SecondPlay			string  // 第二存储/播放位置
 }
 
+func ChangeImage(id int,saveFilePath string) (flag bool){
+	o := orm.NewOrm()
+	_, err := o.QueryTable("course").Filter("id", id).Update(orm.Params{
+		"small_image": saveFilePath,
+	})
+	if err == nil {
+		flag = true
+	}else{
+		flag = false
+	}
+	return
+}
+
 func AddNewCourse(course *Course) (int64, error) {
 	o := orm.NewOrm()
 	id, err := o.Insert(course)

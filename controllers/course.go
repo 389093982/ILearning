@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"ILearning/ileaning/util"
 	"strings"
+	"path"
 )
 
 type CourseController struct {
@@ -25,13 +26,19 @@ func (this *CourseController) ChangeImage()  {
 	f, fh, err := this.GetFile("file")
 	defer f.Close()
 	if err != nil {
-		this.Data["json"] = &map[string]interface{}{"path": "", "status": false}
+		this.Data["json"] = &map[string]interface{}{"path": "", "status": "ERROR"}
 		this.ServeJSON()
 	} else {
 		// 与 this.GetFile("file") 保持一致的名字
-		saveFilePath := UploadFileSavePathImg + fh.Filename
-		this.SaveToFile("file", saveFilePath)
-		this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": true}
+		saveFilePath := path.Join(UploadFileSavePathImg,fh.Filename)
+		err := this.SaveToFile("file", saveFilePath)
+		// 更新图片
+		flag := models.ChangeImage(id, saveFilePath)
+		if(err == nil && flag == true){
+			this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "SUCCESS"}
+		}else{
+			this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "ERROR"}
+		}
 		this.ServeJSON()
 	}
 }
