@@ -18,7 +18,7 @@
 <script>
     // html5 实现图片预览功能
     $(function () {
-        $("#changeImageFile").change(function (e) {
+        $(".changeImageFile").change(function (e) {
             var file = e.target.files[0] || e.dataTransfer.files[0];
             if (file) {
                 var reader = new FileReader();
@@ -32,8 +32,10 @@
     })
 
     // Jquery 实现文件上传操作
-    function changeImage(courseId) {
-        var file = document.getElementById("changeImageFile").files[0];
+    function changeImage(node, courseId) {
+        // jquery 对象转 dom 对象,再通过 files[0] 属性获取文件
+        // document.getElementById('.changeImageFile').files[0]
+        var file = $(node).parent().find(".changeImageFile").get(0).files[0];
         var formData = new FormData();
         formData.append('id',courseId);
         formData.append('file', file);
@@ -71,7 +73,7 @@
         </article>
         <section>
             <div style="float: left; margin-top:10px;">
-                <img :src="' course.small_image '" height="150" width="200" onerror="javascript:this.src='/static/img/a.png';"/><br>
+                <img :src=" course.small_image " height="150" width="200" onerror="javascript:this.src='/static/img/a.png';"/><br>
                 <a href="javascript:;" style="color: green;" class="md-trigger" :data-modal="'changeImage_' + course.id">换张图片</a>
             </div>
             <div style="float: left;padding-left: 150px;">
@@ -98,8 +100,8 @@
                 <h3>上传/更新图片</h3>
                 <div>
                     <img class="changeImage" :src=" course.small_image " width="200px" height="150px">
-                    <input id="changeImageFile" type="file" name="changeImageFile" style="margin-top: 100px;"/>
-                    <a href="javascript:;" :onclick="'changeImage(' + course.id + ')'">提交</a>
+                    <input class="changeImageFile" type="file" name="changeImageFile" style="margin-top: 100px;"/>
+                    <a href="javascript:;" :onclick="'changeImage(this, ' + course.id + ')'">提交</a>
                 </div>
 
             </div>

@@ -9,6 +9,7 @@ import (
 	"ILearning/ileaning/util"
 	"strings"
 	"path"
+	"github.com/satori/go.uuid"
 )
 
 type CourseController struct {
@@ -30,10 +31,13 @@ func (this *CourseController) ChangeImage()  {
 		this.ServeJSON()
 	} else {
 		// 与 this.GetFile("file") 保持一致的名字
-		saveFilePath := path.Join(UploadFileSavePathImg,fh.Filename)
+		// fh.Filename 原始文件名,存储时使用 UUID 进行重命名
+		u,_ := uuid.NewV4()
+		newFileName := u.String() + path.Ext(fh.Filename)
+		saveFilePath := path.Join(UploadFileSavePathImg, newFileName)
 		err := this.SaveToFile("file", saveFilePath)
 		// 更新图片
-		flag := models.ChangeImage(id, saveFilePath)
+		flag := models.ChangeImage(id, "/" + saveFilePath)
 		if(err == nil && flag == true){
 			this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "SUCCESS"}
 		}else{
