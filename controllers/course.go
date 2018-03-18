@@ -22,6 +22,18 @@ func init(){
 	UploadFileSavePathImg = beego.AppConfig.String("UploadFileSavePathImg")
 }
 
+func (this *CourseController) UploadVedio()  {
+	method := this.Ctx.Request.Method
+	if method == "GET"{
+		// get 请求加载页面
+		this.Layout = "course/home_manage.html"
+		this.TplName = "course/upload_vedio.html"
+	}else{
+		// post 请求更新视频
+	}
+
+}
+
 func (this *CourseController) ChangeImage()  {
 	id, _:= this.GetInt("id")
 	f, fh, err := this.GetFile("file")
@@ -141,8 +153,15 @@ func (this *CourseController) QueryCourse() {
 		// filterType == "courselist" 时,查看当前登录用户已发布课程
 		condArr["CourseAuthor"] = this.Ctx.Input.Session("UserName").(string)
 	}else{
-		condArr["CourseAuthor"] = this.GetString("CourseAuthor")
-		condArr["CourseType"] = this.GetString("CourseType")
+		// 否则从请求参数中获取相关信息
+		CourseAuthor := this.GetString("CourseAuthor","")
+		CourseType := this.GetString("CourseType","")
+		if CourseAuthor != ""{
+			condArr["CourseAuthor"] = CourseAuthor
+		}
+		if CourseType != ""{
+			condArr["CourseType"] = CourseType
+		}
 	}
 	courses, count, err := models.QueryCourse(condArr, 1, offset)
 	paginator := pagination.SetPaginator(this.Ctx, offset, count)

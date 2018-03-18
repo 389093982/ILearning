@@ -15,7 +15,22 @@
 <link rel="stylesheet" href="/static/common/leftnav/css/leftnav.css" media="screen" type="text/css">
 <script type="text/javascript" src='/static/common/leftnav/js/leftnav.js'></script>
 <body>
-{{template "header.html"}}
+{{template "common/header.html"}}
+
+<script>
+    function remenberAndForward(openMenuRefer, href) {
+        sessionStorage.setItem("openMenuRefer",openMenuRefer);
+        window.location.href=href;
+    }
+    
+    $(function () {
+        // 获取 session 中的 openMenuRefer
+        var openMenuRefer = sessionStorage.getItem("openMenuRefer");
+        // 模拟触发 click 事件
+        $("#accordion").find(".link[openMenuRefer='" + openMenuRefer + "']").trigger("click");
+    });
+</script>
+
 
 <div style="width: 88%;margin: 15px auto;">
     <div style="width:200px;min-height:300px;float: left;">
@@ -23,17 +38,21 @@
             <a class="list-title" href="/course/homemanage">我的领地</a>
             <ul id="accordion" class="accordion">
                 <li>
-                    <div class="link"><i class="fa fa-leaf"></i>课程管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link" openMenuRefer="course">
+                        <i class="fa fa-leaf"></i>课程管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
-                        <li id="courselist"><a href="/course/courselist">查看发布课程</a></li>
-                        <li id="newcourse"><a href="/course/newcourse">新开课程</a></li>
-                        <li id="mysaled"><a>上传更新视频</a></li>
+                        <li id="courselist"><a href="javascript:;" onclick="remenberAndForward('course','/course/courselist')">查看发布课程</a></li>
+                        <li id="newcourse"><a href="javascript:;" onclick="remenberAndForward('course','/course/newcourse')">新开课程</a></li>
+                        <li id="uploadvedio"><a href="javascript:;" onclick="remenberAndForward('course','/course/uploadvedio')">上传更新视频</a></li>
                         <li id="publicproducts"><a>最近浏览</a></li>
                         <li id="productlists"><a>我的收藏</a></li>
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-shopping-cart"></i>购物车<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-shopping-cart"></i>购物车<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="publishpurchase"><a>发布采购</a></li>
                         <li id="postneeds"><a>查看采购</a></li>
@@ -44,14 +63,18 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-file-text"></i>订单管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-file-text"></i>订单管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="myorder"><a>我的订单</a></li>
                         <li id="myrefund"><a>退款申请</a></li>
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-globe"></i>金融管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-globe"></i>金融管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="myloan"><a>我的借贷</a></li>
                         <li id="financialmanage"><a>需求申请</a></li>
@@ -59,7 +82,9 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-unlock-alt"></i>安全管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-unlock-alt"></i>安全管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="basecomInfo"><a>基本信息</a></li>
                         <li id="authenchange"><a>认证信息</a></li>
@@ -71,26 +96,34 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-star"></i>评价管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-star"></i>评价管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="usercomments"><a>我的评价</a></li>
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-bell"></i>消息管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-bell"></i>消息管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="mymsg"><a>我的消息</a></li>
                     </ul>
                 </li>
                 <!-- 视情况而定 -->
                 <li>
-                    <div class="link"><i class="fa fa-signal"></i>统计管理<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-signal"></i>统计管理<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="censusmanager"><a>月浏览量</a></li>
                     </ul>
                 </li>
                 <li>
-                    <div class="link"><i class="fa fa-credit-card"></i>用户协议<i class="fa fa-chevron-down"></i></div>
+                    <div class="link">
+                        <i class="fa fa-credit-card"></i>用户协议<i class="fa fa-chevron-down"></i>
+                    </div>
                     <ul class="submenu">
                         <li id="oweindex"><a>开通白条</a></li>
                         <li id="myIous"><a>我的白条</a></li>
@@ -106,7 +139,7 @@
     </div>
 </div>
 
-{{template "footer.html"}}
-{{template "rightmenu.html"}}
+{{template "common/footer.html"}}
+{{template "common/rightmenu.html"}}
 </body>
 </html>

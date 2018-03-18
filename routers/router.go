@@ -19,5 +19,6 @@ func init() {
 	beego.Router("/course/courselist",&controllers.CourseController{},"get,post:CourseList")
 	beego.Router("/course/newcourse/add",&controllers.CourseController{},"get,post:AddNewCourse")
 	beego.Router("/course/newcourse/changeImage",&controllers.CourseController{},"get,post:ChangeImage")
+	beego.Router("/course/uploadvedio",&controllers.CourseController{},"get,post:UploadVedio")
 	beego.Router("/course/queryCourseExist",&controllers.CourseController{},"get,post:QueryCourseExist")
 }

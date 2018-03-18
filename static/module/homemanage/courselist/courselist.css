@@ -1,0 +1,4 @@
+/* Vue.js由于延时显示了 message 引用界面解决方法 定义v-cloak 的style */
+[v-cloak] {
+    display: none;
+}

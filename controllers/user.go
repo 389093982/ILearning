@@ -47,8 +47,8 @@ func (this *UserController) Regist()  {
 }
 
 func (this *UserController) Login()  {
-	Method := this.Ctx.Request.Method
-	if Method == "GET"{
+	method := this.Ctx.Request.Method
+	if method == "GET"{
 		this.TplName = "login.html"
 	}else{
 		inputs := this.Input()
