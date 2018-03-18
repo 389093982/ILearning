@@ -17,21 +17,42 @@ type CourseController struct {
 }
 
 var UploadFileSavePathImg string
+var UploadFileSavePathVedio string
 
 func init(){
 	UploadFileSavePathImg = beego.AppConfig.String("UploadFileSavePathImg")
+	UploadFileSavePathVedio = beego.AppConfig.String("UploadFileSavePathVedio")
 }
 
 func (this *CourseController) UploadVedio()  {
-	method := this.Ctx.Request.Method
-	if method == "GET"{
-		// get 请求加载页面
-		this.Layout = "course/home_manage.html"
-		this.TplName = "course/upload_vedio.html"
+	// 获取课程 id
+	id, err1 := this.GetInt("id")
+	vedio_number, err2 := this.GetInt("vedio_number")
+	f, fh, err3 := this.GetFile("uploadVedioFile")
+	defer f.Close()
+	if err1 == nil && err2 == nil && err3 == nil{
+		// fh.Filename 原始文件名,存储时使用 UUID 进行重命名
+		u,_ := uuid.NewV4()
+		newFileName := u.String() + path.Ext(fh.Filename)
+		saveFilePath := path.Join(UploadFileSavePathVedio, newFileName)
+		// 与 this.GetFile("file") 保持一致的名字
+		err := this.SaveToFile("uploadVedioFile", saveFilePath)
+		if err == nil{
+			// 刷新 DB 记录
+			flag := models.UploadVedio(id, vedio_number, "/" + saveFilePath, fh.Filename)
+			if(flag == true){
+				this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "SUCCESS"}
+			}else{
+				this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "ERROR"}
+			}
+		}else{
+			this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "ERROR"}
+		}
+		this.ServeJSON()
 	}else{
-		// post 请求更新视频
+		this.Data["json"] = &map[string]interface{}{"path": "", "status": "ERROR"}
+		this.ServeJSON()
 	}
-
 }
 
 func (this *CourseController) ChangeImage()  {

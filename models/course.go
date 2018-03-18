@@ -22,10 +22,44 @@ type CourseVedio struct {
 	Id					int
 	Course				*Course	`orm:"rel(fk)"`
 	VedioName			string	// 视频名称
-	CourseName			string	// 视频对应的课程名称
 	VedioNumber			int		// 视频集数编号
 	FirstPlay			string	// 第一存储/播放位置
 	SecondPlay			string  // 第二存储/播放位置
+}
+
+// 四个参数：课程 id,视频集数,存储文件路径,原始文件名
+func UploadVedio(course_id int, vedio_number int, saveFilePath string, fileName string)  (flag bool) {	// 默认 flag 为 false
+	o := orm.NewOrm()
+	// 查询 course 相关信息
+	var course Course
+	o.QueryTable("course").Filter("id",course_id).Limit(1).One(&course)
+	count, err1 := o.QueryTable("course_vedio").Filter("course_id", course_id).Filter("vedio_number",vedio_number).Count()
+	if err1 == nil {
+		if count > 0{
+			_, err2 := o.QueryTable("course_vedio").Filter("course_id", course_id).Filter("vedio_number",vedio_number).Update(orm.Params{
+				"vedio_name": fileName,"first_play": saveFilePath,"second_play": saveFilePath,
+			})
+			if err2 == nil{
+				flag = true
+			}
+		}else{
+			var cVedio = CourseVedio{Course:&course, VedioName:fileName, VedioNumber:vedio_number, FirstPlay:saveFilePath, SecondPlay:saveFilePath}
+			_,err3 := o.Insert(&cVedio)
+			if err3 == nil{
+				flag = true
+			}
+		}
+	}
+	if flag{
+		// 更新完视频需要更新课程表里面的视频集数
+		if vedio_number > course.CourseNumber{
+			course.CourseNumber = vedio_number
+			if _, err := o.Update(&course); err == nil{
+				flag = true
+			}
+		}
+	}
+	return
 }
 
 func ChangeImage(id int,saveFilePath string) (flag bool){
@@ -50,6 +84,12 @@ func AddNewCourse(course *Course) (int64, error) {
 func QueryCourseExist(course_name string) (count int64, err error)  {
 	o := orm.NewOrm()
 	count, err = o.QueryTable("course").Filter("course_name", course_name).Count()
+	return
+}
+
+func QueryCourseById(id int) (course Course, err error)  {
+	o := orm.NewOrm()
+	err = o.QueryTable("course").Filter("id", id).Limit(1).One(&course)
 	return
 }
 

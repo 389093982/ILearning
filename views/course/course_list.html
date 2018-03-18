@@ -36,6 +36,8 @@
                 <p>课程得分：[[ course.score ]]</p>
                 <p>课程集数：[[ course.course_number ]]</p>
                 <p>课程更新状态：[[ course.course_status ]]</p>
+                <p><a href="javascript:;" style="color:#f55e13;font-family: Arial;font-weight: 700;"
+                      class="md-trigger" :data-modal="'uploadvedio_' + course.id">上传/更新视频</a></p>
             </div>
             <div style="clear:both;"></div>
         </section>
@@ -55,8 +57,86 @@
             </div>
         </div>
         <div class="md-overlay"></div>
+
+        <div class="md-modal md-effect-1" :id="'uploadvedio_' + course.id">
+            <div class="md-content" style="height: 400px;">
+                <a href="#" class="md-close" style="float: right;margin: 10px;">X</a>
+                <h3>上传/更新视频</h3>
+                <div>
+                    <p>课程名称:<strong>[[ course.course_name ]]</strong></p>
+                    <p>选择更新的集数：
+                        <ul id="course_number">
+                            <li onclick="setCheck(this);"><a href="javascript:;" vedio_number="1">1</a></li>
+                            <li onclick="setCheck(this);"><a href="javascript:;" vedio_number="2">2</a></li>
+                            <li onclick="setCheck(this);"><a href="javascript:;" vedio_number="3">3</a></li>
+                            <li onclick="setCheck(this);"><a href="javascript:;" vedio_number="4">4</a></li>
+                            <li onclick="setCheck(this);"><a href="javascript:;" vedio_number="5">5</a></li>
+                            <li onclick="setCheck(this);"><a href="javascript:;" vedio_number="6">6</a></li>
+                            <li class="last" onclick="setCheck(this);"><a href="javascript:;" vedio_number="7">新一集(7)</a></li>
+                        </ul>
+                        <div style="clear: both;"></div>
+                    </p>
+
+                    <p>
+                        <input name="vedio_number" type="hidden" value=""/>
+                        <input name="vedio" type="file" class="uploadVedioFile"/>
+                        <a href="javascript:;" :onclick="'uploadVedio(this, ' + course.id + ')'">提交</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="md-overlay"></div>
     </div>
 </div>
+
+<style>
+    #course_number li{float: left;margin: 5px;padding:0px;background-color: rgba(255, 148, 0, 0.38);width: 20px;
+        height: 20px;text-align: center;}
+    #course_number li.checked{background-color: #ff9400;}
+    #course_number li.last{width: 70px}
+    #course_number li a{text-decoration:none; color: #FFFFFF;font-size:12px;}
+</style>
+
+<script>
+    function setCheck(liNode) {
+        $(liNode).addClass("checked");
+        $(liNode).siblings().removeClass("checked");
+        // 填写表单 vedio_number
+        var vedio_number = $(liNode).find("a").attr("vedio_number");
+        $("input[name='vedio_number']").val(vedio_number);
+    }
+    
+    function uploadVedio(node, courseId) {
+        // jquery 对象转 dom 对象,再通过 files[0] 属性获取文件
+        var uploadVedioFile = $(node).parent().find(".uploadVedioFile").get(0).files[0];
+        var vedio_number = $("input[name='vedio_number']").val();
+        var formData = new FormData();
+        formData.append('id',courseId);
+        formData.append('vedio_number',vedio_number);
+        formData.append('uploadVedioFile', uploadVedioFile);
+
+        $.ajax({
+            url: "/course/newcourse/uploadvedio",
+            type: "post",
+            data: formData,
+            contentType: false,
+            processData: false,
+            mimeType: "multipart/form-data",
+            success: function (data) {
+                alert(data);
+                alert(JSON.parse(data));
+                var obj = JSON.parse(data);
+                if(obj.status == "SUCCESS"){
+                    // 页面刷新
+                    location.reload();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+</script>
 
 
 
