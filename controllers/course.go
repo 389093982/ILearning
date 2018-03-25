@@ -85,6 +85,7 @@ func (this *CourseController) EndUpdate() {
 }
 
 func (this *CourseController) UploadVedio()  {
+	user_name := this.Ctx.Input.Session("UserName").(string)
 	// 获取课程 id
 	id, err1 := this.GetInt("id")
 	vedio_number, err2 := this.GetInt("vedio_number")
@@ -105,7 +106,22 @@ func (this *CourseController) UploadVedio()  {
 		err := this.SaveToFile("uploadVedioFile", saveFilePath)
 		if err == nil{
 			// 刷新 DB 记录
-			flag := models.UploadVedio(id, vedio_number, "/" + saveFilePath, fh.Filename)
+			id,flag := models.UploadVedio(id, vedio_number, "/" + saveFilePath, fh.Filename)
+
+			// 刷新评论主题
+			topic_theme := models.TopicTheme{}
+			topic_theme.TopicId = int(id)
+			topic_theme.TopicType = "course_vedio#id"
+			topic_theme.TopicContent = strings.Join([]string{user_name,"@",fh.Filename,
+				"视频更新啦，喜欢该课程的小伙伴们不要错过奥，简洁、直观、免费的课程，能让你更快的掌握知识"}, "")
+			topic_theme.CreatedBy = user_name
+			topic_theme.CreatedTime = time.Now()
+			topic_theme.LastUpdatedBy = user_name
+			topic_theme.LastUpdatedTime = time.Now()
+			// 增加一条评论主题
+			models.AddTopicTheme(&topic_theme)
+
+
 			if(flag == true){
 				this.Data["json"] = &map[string]interface{}{"status": "SUCCESS", "msg":"保存成功!"}
 			}else{
@@ -179,8 +195,9 @@ func (this *CourseController) AddNewCourse()  {
 
 	topic_theme := models.TopicTheme{}
 	topic_theme.TopicId = int(id)
-	topic_theme.TopicType = "course_comment"
-	topic_theme.TopicContent = strings.Join([]string{user_name,"@",course_name,"@",course_short_desc}, "")
+	topic_theme.TopicType = "course#id"
+	topic_theme.TopicContent = strings.Join([]string{user_name,"@",course_name,
+	"课程更新啦，喜欢该课程的小伙伴们不要错过奥，简洁、直观、免费的课程，能让你更快的掌握知识@",course_short_desc}, "")
 	topic_theme.CreatedBy = user_name
 	topic_theme.CreatedTime = time.Now()
 	topic_theme.LastUpdatedBy = user_name
@@ -249,6 +266,8 @@ func (this *CourseController) Play() {
 	// 播放次数加 1
 	models.UpdateWatchNumber(course_id)
 	// 视频播放
+	course, _ := models.QueryCourseById(course_id)
+	this.Data["Course"] = &course
 	this.TplName = "course_play.html"
 }
 

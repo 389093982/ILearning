@@ -15,8 +15,9 @@
 <script type="text/javascript" src="/static/common/vue.min.js"></script>
 {{template "common/header.html"}}
 
-<input name="course_id" value="{{ .Course.Id }}" type="hidden"/>
-<!-- 被评论人员 -->
+<!-- 缓存隐藏信息 -->
+<input name="topic_id" value="{{ .Course.Id }}" type="hidden"/>
+<input name="topic_type" value="course#id" type="hidden"/>
 <input name="refer_user_name" value="{{ .Course.CourseAuthor }}" type="hidden"/>
 
 <div style="width: 92%;min-height: 500px;margin: 20px auto;">
@@ -81,8 +82,19 @@
         </div>
     </div>
 
-    <div style="width: 35%;min-height: 500px;background-color: rgba(0,128,0,0.09);float: right;">
-
+    <div style="width: 35%;min-height: 500px;border: 1px #dbdbdb solid;float: right;">
+        <div style="text-align:center;">
+            <a href="javascript:;" style="position: relative;color: #f40;display: block;height: 26px;line-height: 26px;
+                background: #ffe4dd;font-size: 12px;">非法/亚健康视频举报</a>
+        </div>
+        <ul>
+            <li style="float: left;margin: 10px;"><a href="/note/list">在线笔记</a></li>
+            <li style="float: left;margin: 10px;">课后练习</li>
+            <li style="float: left;margin: 10px;">名师课堂</li>
+            <li style="float: left;margin: 10px;">互动社区</li>
+            <li style="float: left;margin: 10px;">证书获取</li>
+            <li style="float: left;margin: 10px;">更多</li>
+        </ul>
     </div>
 </div>
 

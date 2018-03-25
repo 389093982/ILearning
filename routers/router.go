@@ -28,4 +28,6 @@ func init() {
 	beego.Router("/comment/topicTheme/filter",&controllers.CommentController{},"get,post:FilterTopicTheme")
 	beego.Router("/comment/topicReply/add",&controllers.CommentController{},"get,post:AddTopicReply")
 	beego.Router("/comment/topicReply/filter",&controllers.CommentController{},"get,post:FilterTopicReply")
+
+	beego.Router("/note/list",&controllers.CommentController{},"get,post:ListNote")
 }

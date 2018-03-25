@@ -87,7 +87,7 @@ func EndUpdate(id int) (flag bool) {
 }
 
 // 四个参数：课程 id,视频集数,存储文件路径,原始文件名
-func UploadVedio(course_id int, vedio_number int, saveFilePath string, fileName string)  (flag bool) {	// 默认 flag 为 false
+func UploadVedio(course_id int, vedio_number int, saveFilePath string, fileName string)  (id int64, flag bool) {	// 默认 flag 为 false
 	o := orm.NewOrm()
 	// 查询 course 相关信息
 	var course Course
@@ -118,6 +118,14 @@ func UploadVedio(course_id int, vedio_number int, saveFilePath string, fileName 
 				flag = true
 			}
 		}
+	}
+
+	// 查询记录 id
+	var list orm.ParamsList
+	o.QueryTable("course_vedio").Filter("course_id", course_id).Filter("vedio_number",vedio_number).ValuesFlat(&list, "id")
+	_id,ok:=list[0].(int64)
+	if ok{
+		id = _id
 	}
 	return
 }

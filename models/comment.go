@@ -32,7 +32,10 @@ type TopicReply struct {
 
 func AddTopicTheme(topic_theme *TopicTheme) (id int64,err error) {
 	o := orm.NewOrm()
-	id, err = o.Insert(topic_theme)
+	count,_:= o.QueryTable("topic_theme").Filter("topic_id", topic_theme.TopicId).Filter("topic_type", topic_theme.TopicType).Count()
+	if count == 0{
+		id, err = o.Insert(topic_theme)
+	}
 	return
 }
 
@@ -52,6 +55,14 @@ func FilterTopicReply(topic_id int, topic_type string, parent_id int)  (topic_re
 	o := orm.NewOrm()
 	// 查询 topicTheme
 	topicTheme, _ := FilterTopicTheme(topic_id, topic_type)
-	_, err = o.QueryTable("topic_reply").Filter("topic_theme_id", topicTheme.Id).Filter("parent_id", parent_id).All(&topic_replys)
+	_, err = o.QueryTable("topic_reply").Filter("topic_theme_id", topicTheme.Id).Filter("parent_id", parent_id).
+		OrderBy("-created_time").All(&topic_replys)
 	return
+}
+
+func ModifySubReplyAmount(id int)  {
+	o := orm.NewOrm()
+	o.QueryTable("topic_reply").Filter("id", id).Update(orm.Params{
+		"sub_reply_amount": orm.ColValue(orm.ColAdd, 1),
+	})
 }

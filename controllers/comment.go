@@ -64,12 +64,14 @@ func (this *CommentController) AddTopicReply()  {
 	topic_reply.ReplyContent = reply_content
 	topic_reply.TopicTheme = &topicTheme
 	topic_reply.ReferUserName = refer_user_name
+	topic_reply.SubReplyAmount = 0
 	topic_reply.CreatedBy = user_name
 	topic_reply.CreatedTime = time.Now()
 	topic_reply.LastUpdatedBy = user_name
 	topic_reply.LastUpdatedTime = time.Now()
 
 	_, err := models.AddTopicReply(&topic_reply)
+	models.ModifySubReplyAmount(parent_id)
 
 	if err == nil{
 		this.Data["json"] = &map[string]interface{}{"status": "SUCCESS"}
