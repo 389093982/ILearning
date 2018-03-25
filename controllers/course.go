@@ -10,6 +10,7 @@ import (
 	"strings"
 	"path"
 	"github.com/satori/go.uuid"
+	"time"
 )
 
 type CourseController struct {
@@ -24,13 +25,78 @@ func init(){
 	UploadFileSavePathVedio = beego.AppConfig.String("UploadFileSavePathVedio")
 }
 
+func (this *CourseController) ToggleFavorite()  {
+	// 获取课程 id
+	course_id, _ := this.GetInt("course_id")
+	favorite_type := this.GetString("favorite_type")
+	user_name := this.Ctx.Input.Session("UserName").(string)
+	count, err:= models.QueryFavorite(user_name,course_id,favorite_type)
+	if err == nil{
+		if count > 0{
+			models.DelFavorite(user_name,course_id,favorite_type)
+		}else{
+			models.AddFavorite(user_name,course_id,favorite_type)
+		}
+		this.Data["json"] = &map[string]interface{}{"status": "SUCCESS"}
+	}else{
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
+	}
+	this.ServeJSON()
+}
+
+func (this *CourseController) ShowCourseDetail()  {
+	// 获取课程 id
+	id, _ := this.GetInt("id")
+	course, _:= models.QueryCourseById(id)
+	cVedios, _:= models.QueryCourseVedio(id)
+	user_name := this.Ctx.Input.Session("UserName").(string)
+	count, _:= models.QueryFavorite(user_name,id,"collect")
+	if count > 0{
+		this.Data["Collect"] = true
+	}else{
+		this.Data["Collect"] = false
+	}
+	count1, _:= models.QueryFavorite(user_name,id,"praise")
+	if count1 > 0{
+		this.Data["Praise"] = true
+	}else{
+		this.Data["Praise"] = false
+	}
+	this.Data["Course"] = course
+	this.Data["CourseVideo"] = cVedios
+	// 视频详情页面
+	this.TplName = "course_detail.html"
+}
+
+func (this *CourseController) EndUpdate() {
+	// 获取课程 id
+	id, err := this.GetInt("id")
+	if err == nil{
+		flag := models.EndUpdate(id)
+		if(flag == true){
+			this.Data["json"] = &map[string]interface{}{"status": "SUCCESS"}
+		}else{
+			this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
+		}
+	}else{
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
+	}
+	this.ServeJSON()
+}
+
 func (this *CourseController) UploadVedio()  {
 	// 获取课程 id
 	id, err1 := this.GetInt("id")
 	vedio_number, err2 := this.GetInt("vedio_number")
 	f, fh, err3 := this.GetFile("uploadVedioFile")
 	defer f.Close()
-	if err1 == nil && err2 == nil && err3 == nil{
+	// 检查文件格式是否是视频格式
+	if !util.CheckVedio(path.Ext(fh.Filename)){
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR", "msg":"视频格式不合法!"}
+		this.ServeJSON()
+		return
+	}
+	if err1 == nil && err2 == nil && err3 == nil {
 		// fh.Filename 原始文件名,存储时使用 UUID 进行重命名
 		u,_ := uuid.NewV4()
 		newFileName := u.String() + path.Ext(fh.Filename)
@@ -41,16 +107,16 @@ func (this *CourseController) UploadVedio()  {
 			// 刷新 DB 记录
 			flag := models.UploadVedio(id, vedio_number, "/" + saveFilePath, fh.Filename)
 			if(flag == true){
-				this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "SUCCESS"}
+				this.Data["json"] = &map[string]interface{}{"status": "SUCCESS", "msg":"保存成功!"}
 			}else{
-				this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "ERROR"}
+				this.Data["json"] = &map[string]interface{}{"status": "ERROR", "msg":"保存失败!"}
 			}
 		}else{
-			this.Data["json"] = &map[string]interface{}{"path": saveFilePath, "status": "ERROR"}
+			this.Data["json"] = &map[string]interface{}{"status": "ERROR", "msg":"保存失败!"}
 		}
 		this.ServeJSON()
 	}else{
-		this.Data["json"] = &map[string]interface{}{"path": "", "status": "ERROR"}
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR", "msg":"保存失败!"}
 		this.ServeJSON()
 	}
 }
@@ -89,6 +155,7 @@ func (this *CourseController) CourseList()  {
 func (this *CourseController) AddNewCourse()  {
 	//初始化
 	data := make(map[string]interface{}, 1)
+	user_name := this.Ctx.Input.Session("UserName").(string)
 
 	var course models.Course
 	course_name := this.GetString("course_name")
@@ -99,8 +166,9 @@ func (this *CourseController) AddNewCourse()  {
 	course.CourseType = course_type
 	course.CourseSubType = course_sub_type
 	course.CourseShortDes = course_short_desc
-	course.CourseAuthor = this.Ctx.Input.Session("UserName").(string)
-	_, err := models.AddNewCourse(&course)
+	course.CourseStatus = "更新中"
+	course.CourseAuthor = user_name
+	id, err := models.AddNewCourse(&course)
 	if err == nil{
 		data["status"] = "SUCCESS"
 		data["msg"] = "保存成功!"
@@ -108,6 +176,18 @@ func (this *CourseController) AddNewCourse()  {
 		data["status"] = "ERROR"
 		data["msg"] = err.Error()
 	}
+
+	topic_theme := models.TopicTheme{}
+	topic_theme.TopicId = int(id)
+	topic_theme.TopicType = "course_comment"
+	topic_theme.TopicContent = strings.Join([]string{user_name,"@",course_name,"@",course_short_desc}, "")
+	topic_theme.CreatedBy = user_name
+	topic_theme.CreatedTime = time.Now()
+	topic_theme.LastUpdatedBy = user_name
+	topic_theme.LastUpdatedTime = time.Now()
+	// 增加一条评论主题
+	models.AddTopicTheme(&topic_theme)
+
 	//序列化
 	json_obj, err := json.Marshal(data)
 	if err == nil {
@@ -156,6 +236,18 @@ func (this *CourseController) HomeManage()  {
 }
 
 func (this *CourseController) Play() {
+	course_id,_ := this.GetInt("course_id")
+	vedio_id,_ := this.GetInt("vedio_id")
+	cVedios, _ := models.QueryCourseVedio(course_id)
+	for _,value := range cVedios{
+		cVedio := &value
+		if cVedio.VedioNumber == vedio_id{
+			this.Data["CourseVedio"] = &cVedio
+			break
+		}
+	}
+	// 播放次数加 1
+	models.UpdateWatchNumber(course_id)
 	// 视频播放
 	this.TplName = "course_play.html"
 }

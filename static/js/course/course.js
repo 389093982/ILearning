@@ -8,32 +8,17 @@ function bindPopoverEvent() {
     $('#vedio li').each(function (index) {
         $(this).webuiPopover({
             title:function () {
-                var courses = $(document).data("courses");
-                for(var i=0; i<courses.length; i++){
-                    if (courses[i].id == $('#vedio li:eq(' + index + ')').attr("course-id")){
-                        var course = courses[i];
-                        return course.course_name
-                            + "<span style='margin-left: 10px;' class='star' score='" + course.score + "'></span>"
-                            + "<span style='float: right;color: red;'>" + course.score +"分</span>";
-                    }
-                }
-                return "";
+                return $(this).parent().find(".title").html();
             },
             content:function () {
-                var courses = $(document).data("courses");
-                for(var i=0; i<courses.length; i++){
-                    if (courses[i].id == $('#vedio li:eq(' + index + ')').attr("course-id")){
-                        var course = courses[i];
-                        return "<ul><li>"
-                            + course.course_status + "："
-                            + course.course_number + "集</li><li>类型：<span class='coursetype'>"
-                            + course.course_type + "</span></li><li>作者：<span class='courseauthor'>"
-                            + course.course_author + "</span></li><li>简介：<span class='courseshortdes'>"
-                            + course.course_short_desc + "</span></li><li>"
-                            + renderNumber(course.course_number) + "</li></ul>";
-                    }
-                }
-                return "";
+                // 获取课程技术
+                var course_id = $(this).parent().find(".content").attr("course_id");
+                var course_number = $(this).parent().find(".content").attr("course_number");
+                // 获取 html
+                var html = $(this).parent().find(".content").html();
+                // 替换集数信息
+                html = html.replace('<li class="course_number"></li>','<li class="course_number">' + renderNumber(course_id,course_number) + '</li>');
+                return html;
             },
             trigger:'hover',
             placement:function () {
@@ -70,19 +55,16 @@ function loadCourse() {
         data:{"offset":15},
         success:function (data) {
             var jsonObj = $.parseJSON(data);
-            var courses = jsonObj.courses;
-            var html = "";
-            for(var i=0; i<courses.length; i++){
-                var course = courses[i];
-                html += "<li course-id='" + course.id +"'>"
-                    + "<a href='#'><img src='" + course.small_image + "'/></a>"
-                    + "<dl><dt><a href='#'>" + course.course_name + "</a></dt>"
-                    + "<dd>" + course.course_short_desc + "</dd></dl></li>";
-            }
-            // 拼接 html
-            $("#vedio ul").html(html);
+            new Vue({
+                // 修改 vue 默认分隔符,解决冲突问题
+                delimiters: ['[[', ']]'],
+                el: '#vedio',
+                data: {
+                    courses: jsonObj.courses
+                }
+            });
             // 缓存数据在 document 上面
-            $(document).data("courses", courses);
+            $(document).data("courses", jsonObj.courses);
             // 绑定 popover 事件
             bindPopoverEvent();
         }
@@ -90,7 +72,7 @@ function loadCourse() {
 }
 
 // 渲染视频集数
-function renderNumber(number) {
+function renderNumber(course_id, number) {
     var pageSize;
     if(number <=40){
         pageSize = 16;
@@ -126,7 +108,8 @@ function renderNumber(number) {
         renderPageDetail:function (start,end) {
             var html = '<div class="tabCon" style="width:350px;height:100px;border:none;">';
             for(var i=start; i<=end; i++){
-                html += '<a href="#" style="display: block;width: 40px;height: 20px;background: #e8e8e8;float: left;margin: 1px;text-align: center;">' + i +'</a>';
+                html += '<a href="/course/play?course_id=' + course_id + '&vedio_id=' + i + '" ' +
+                    'style="display: block;width: 40px;height: 20px;background: #e8e8e8;float: left;margin: 1px;text-align: center;">' + i +'</a>';
             }
             html += '</div>';
             return html;

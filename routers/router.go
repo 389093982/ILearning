@@ -17,8 +17,15 @@ func init() {
 	beego.Router("/course/homemanage",&controllers.CourseController{},"get,post:HomeManage")
 	beego.Router("/course/newcourse",&controllers.CourseController{},"get,post:NewCourse")
 	beego.Router("/course/courselist",&controllers.CourseController{},"get,post:CourseList")
+	beego.Router("/course/showCourseDetail",&controllers.CourseController{},"get,post:ShowCourseDetail")
 	beego.Router("/course/newcourse/add",&controllers.CourseController{},"get,post:AddNewCourse")
 	beego.Router("/course/newcourse/changeImage",&controllers.CourseController{},"get,post:ChangeImage")
 	beego.Router("/course/newcourse/uploadvedio",&controllers.CourseController{},"get,post:UploadVedio")
+	beego.Router("/course/newcourse/endUpdate",&controllers.CourseController{},"get,post:EndUpdate")
 	beego.Router("/course/queryCourseExist",&controllers.CourseController{},"get,post:QueryCourseExist")
+	beego.Router("/course/favorite/toggle",&controllers.CourseController{},"get,post:ToggleFavorite")
+
+	beego.Router("/comment/topicTheme/filter",&controllers.CommentController{},"get,post:FilterTopicTheme")
+	beego.Router("/comment/topicReply/add",&controllers.CommentController{},"get,post:AddTopicReply")
+	beego.Router("/comment/topicReply/filter",&controllers.CommentController{},"get,post:FilterTopicReply")
 }

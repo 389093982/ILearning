@@ -16,7 +16,13 @@
 <link href="/static/common/tabfolder/style/common.css" rel="stylesheet" type="text/css">
 <link href="/static/css/course/course.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/static/common/tabfolder/js/tab.js"></script>
+<script type="text/javascript" src="/static/common/vue.min.js"></script>
 <script src="/static/js/course/course.js"></script>
+<style>
+    [v-cloak] {
+        display: none;
+    }
+</style>
 <body>
     {{template "common/header.html"}}
     <div id="nav">
@@ -38,7 +44,45 @@
             </div>
 
             <div id="vedioArea">
-                <div id="vedio"><ul></ul></div>
+                <div id="vedio">
+                    <ul v-cloak v-for="course in courses">
+                        <li :course-id=" course.id ">
+                            <a :href="'/course/showCourseDetail?id=' + course.id "><img :src=" course.small_image "/></a>
+                            <dl>
+                                <dt>
+                                    <a :href="'/course/showCourseDetail?id=' + course.id ">[[ course.course_name ]]</a>
+                                </dt>
+                                <dd>
+                                    [[ course.course_short_desc ]]
+                                </dd>
+                            </dl>
+                        </li>
+
+                        <div class="popover" style="display: none;">
+                            <span class="title">
+                                <span style='margin-left: 10px;' class='star' :score=" course.score "></span>
+                                <span style='float: right;color: red;'> [[ course.score ]] 分</span>
+                            </span>
+                            <span class="content" :course_number=" course.course_number " :course_id=" course.id ">
+                                <ul>
+                                    <li>
+                                        [[ course.course_status ]] : [[ course.course_number ]] 集
+                                    </li>
+                                    <li>
+                                        类型：<span class='coursetype'>[[ course.course_type ]]</span>
+                                    </li>
+                                    <li>
+                                        作者：<span class='courseauthor'>[[ course.course_author ]]</span>
+                                    </li>
+                                    <li>
+                                        简介：<span class='courseshortdes'>[[ course.course_short_desc ]]</span>
+                                    </li>
+                                    <li class="course_number"></li>
+                                </ul>
+                            </span>
+                        </div>
+                    </ul>
+                </div>
             </div>
     </div>
     {{template "common/footer.html"}}
