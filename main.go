@@ -46,6 +46,7 @@ func registerModel()  {
 	orm.RegisterModel(new(models.Favorite))
 	orm.RegisterModel(new(models.TopicTheme))
 	orm.RegisterModel(new(models.TopicReply))
+	orm.RegisterModel(new(models.Note))
 }
 
 // 自动建表
