@@ -30,4 +30,6 @@ func init() {
 	beego.Router("/comment/topicReply/filter",&controllers.CommentController{},"get,post:FilterTopicReply")
 
 	beego.Router("/note/list",&controllers.NoteController{},"get,post:ListNote")
+	beego.Router("/note/add",&controllers.NoteController{},"get,post:AddNote")
+	beego.Router("/note/queryNoteExist",&controllers.NoteController{},"get,post:QueryNoteExist")
 }
