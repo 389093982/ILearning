@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>Isoft注册账号</title>
+    <meta charset="utf-8">
+</head>
+<script src="/static/common/jquery-1.11.3.min.js"></script>
+<!-- 需要进行微调整 ckeditor 的默认样式文件 -->
+<link href="/static/common/ckeditor/contents_adjust.css" type="text/css" rel="stylesheet" />
+
+<script>
+$(function () {
+    var personal = $("input[name='personal']").val();
+    if(personal == "personal"){
+        $(".personal").show();
+    }else{
+        $(".notpersonal").show();
+    }
+
+    $(".toggle_favorite").click(function () {
+        var request_href = $(this).attr("request_href");
+        var currentNode = this;
+        $.ajax({
+            url:request_href,
+            method:"post",
+            data:{},
+            success:function () {
+                var html = $(currentNode).html();
+                if(html.indexOf("收藏") > 0){
+                    if(html.indexOf("加入收藏") >= 0){
+                        $(currentNode).html("取消收藏");
+                    }else{
+                        $(currentNode).html("加入收藏");
+                    }
+                }
+            }
+        });
+    });
+});
+</script>
+<body>
+
+<input name="personal" value="{{ .Personal }}" type="hidden"/>
+
+<span class="notpersonal" style="display: none;">
+    <a href="javascript:;" class="toggle_favorite"
+       request_href="/common/toggle_favorite?favorite_id={{ .Note.Id }}&favorite_type=note_collect" style="color:green;">
+        <span class="glyphicon glyphicon-tasks" aria-hidden="true">
+        {{if .NoteCollect}}
+            取消收藏
+        {{else}}
+            加入收藏
+        {{end}}
+        </span>
+    </a>
+</span>
+
+
+<!-- 设置自动换行 -->
+<div class="ckeditor_show" style="white-space:normal;word-break:break-all;word-wrap:break-word;">
+{{ str2html .NoteContent }}
+</div>
+
+</body>
+</html>

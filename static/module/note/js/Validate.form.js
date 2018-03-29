@@ -35,7 +35,8 @@ $.extend(validateFunction, {
         } else if (!format) {
             validateSettings.error.run(option, option.prompts.error.badFormat);
         } else {
-            if (!note_name_state || note_name_old != option.value) {
+            // 不是 isFormReload 表单回显需要验证用户名是否重复
+            if ((!note_name_state || note_name_old != option.value) && !isFormReload()) {
                 if (note_name_old != option.value) {              // 不相等,代表第一次检查,需要后台验证
                     note_name_old = option.value;
                     option.errorEle.html("<span style='color:#999'>检验中……</span>");  // 验证用户名
@@ -100,8 +101,9 @@ $(function () {
             $(this).attr({"disabled":"disabled"}).attr({"value":"提交中,请稍等"});
             $.ajax({
                 type: "POST",
-                url: "/note/add",
+                url: "/note/edit",
                 data: {
+                    "note_id":$("input[name='note_id']").val(),
                     "note_name":$("input[name='note_name']").val(),
                     "note_key_words":$("textarea[name='note_key_words']").val(),
                     "note_content":CKEDITOR.instances.editor.getData()
@@ -109,7 +111,8 @@ $(function () {
                 success: function(data) {
                     if (data.flag == true) {
                         alert("保存成功!");
-                        // window.location = "/course/courselist";
+                        sessionStorage.setItem("openMenuRefer","note");
+                        window.location = "/note/list?filter_type=personal";
                     }else{
                         $("#note_key_words").removeClass().addClass("error").html(data.msg);
                     }
@@ -119,3 +122,11 @@ $(function () {
     });
 });
 
+// 判断是否是表单回显
+function isFormReload() {
+    var note_id = $("input[name='note_id']").val();
+    if(note_id != "" && note_id != undefined && note_id != null){
+        return true;
+    }
+    return false;
+}

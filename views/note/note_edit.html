@@ -17,22 +17,20 @@
 <link href="/static/module/note/css/style.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="/static/module/note/js/Validate.js"></script>
 <script type="text/javascript" src="/static/module/note/js/Validate.form.js"></script>
-
-<script>
-$(function () {
-    // 以对象方式作为配置参数
-    CKEDITOR.replace('editor', {
-        uiColor: '#ffccdd',
-        height: '925',
-        removePlugins :'elementspath,resize', // 移除编辑器底部状态栏显示的元素路径和调整编辑器大小的按钮
-    });
-});
-</script>
+<script type="text/javascript" src="/static/module/note/js/note_edit.js"></script>
 
 <body>
 {{template "common/header.html"}}
+
+<input name="note_id" type="hidden" value="{{ .NoteId }}"/>
+
 <div style="height: 1000px;">
     <div style="float: left;height: 100%;width: 300px;border: 1px solid rgba(0,0,0,0.11);padding-left: 20px;">
+
+        <p style="margin-top: 10px;"><a href="javascript:;" style="color: red;">
+            已有 {{ .NoteOwnerTotalAmount }} 名参与者共编写了 {{ .NoteTotalAmount }} 篇精彩笔记</a>
+        </p>
+
         <div id="formbox">
             <form id="formpersonal" method="post" onsubmit="return false;">
                 <div class="form">
@@ -48,8 +46,8 @@ $(function () {
                     <div class="area-item">
                         <span class="label"><span class="red">*</span>检索关键词：</span><br/>
                         <div class="fl">
-                    <textarea rel="textarea" id="note_key_words" name="note_key_words" rows="10" cols="50" class="textarea">
-                    </textarea>
+                            <textarea rel="textarea" id="note_key_words" name="note_key_words" rows="10" cols="50" class="textarea">
+                            </textarea>
                             <label id="note_key_words_succeed" class="blank"></label>
                             <span class="clear"></span>
                             <div id="note_key_words_error"></div>

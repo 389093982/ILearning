@@ -43,8 +43,8 @@
                 <p style="float: left;width: 50%;">课程更新状态：{{ .Course.CourseStatus }}</p>
                 <p>
                     <a href="javascript:;" class="toggle_favorite" style="float: left;width: 50%;color: red;"
-                       request_href="/course/favorite/toggle?course_id={{ .Course.Id }}&favorite_type=collect">
-                    {{if .Collect}}
+                       request_href="/common/toggle_favorite?favorite_id={{ .Course.Id }}&favorite_type=course_collect">
+                    {{if .CourseCollect}}
                         取消收藏
                     {{else}}
                         加入收藏
@@ -53,8 +53,8 @@
                 </p>
                 <p>
                     <a href="javascript:;" class="toggle_favorite" style="float: left;width: 50%;color: red;"
-                       request_href="/course/favorite/toggle?course_id={{ .Course.Id }}&favorite_type=praise">
-                    {{if .Praise}}
+                       request_href="/common/toggle_favorite?favorite_id={{ .Course.Id }}&favorite_type=course_praise">
+                    {{if .CoursePraise}}
                         取消赞
                     {{else}}
                         我要点赞

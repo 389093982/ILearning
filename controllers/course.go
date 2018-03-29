@@ -25,24 +25,6 @@ func init(){
 	UploadFileSavePathVedio = beego.AppConfig.String("UploadFileSavePathVedio")
 }
 
-func (this *CourseController) ToggleFavorite()  {
-	// 获取课程 id
-	course_id, _ := this.GetInt("course_id")
-	favorite_type := this.GetString("favorite_type")
-	user_name := this.Ctx.Input.Session("UserName").(string)
-	count, err:= models.QueryFavorite(user_name,course_id,favorite_type)
-	if err == nil{
-		if count > 0{
-			models.DelFavorite(user_name,course_id,favorite_type)
-		}else{
-			models.AddFavorite(user_name,course_id,favorite_type)
-		}
-		this.Data["json"] = &map[string]interface{}{"status": "SUCCESS"}
-	}else{
-		this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
-	}
-	this.ServeJSON()
-}
 
 func (this *CourseController) ShowCourseDetail()  {
 	// 获取课程 id
@@ -50,17 +32,17 @@ func (this *CourseController) ShowCourseDetail()  {
 	course, _:= models.QueryCourseById(id)
 	cVedios, _:= models.QueryCourseVedio(id)
 	user_name := this.Ctx.Input.Session("UserName").(string)
-	count, _:= models.QueryFavorite(user_name,id,"collect")
-	if count > 0{
-		this.Data["Collect"] = true
+	flag1 := models.IsFavorite(user_name,id,"course_collect")
+	if flag1 {
+		this.Data["CourseCollect"] = true
 	}else{
-		this.Data["Collect"] = false
+		this.Data["CourseCollect"] = false
 	}
-	count1, _:= models.QueryFavorite(user_name,id,"praise")
-	if count1 > 0{
-		this.Data["Praise"] = true
+	flag2:= models.IsFavorite(user_name,id,"course_praise")
+	if flag2{
+		this.Data["CoursePraise"] = true
 	}else{
-		this.Data["Praise"] = false
+		this.Data["CoursePraise"] = false
 	}
 	this.Data["Course"] = course
 	this.Data["CourseVideo"] = cVedios

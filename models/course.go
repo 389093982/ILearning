@@ -28,36 +28,6 @@ type CourseVedio struct {
 	SecondPlay			string  `json:"second_play"`		// 第二存储/播放位置
 }
 
-// 我的偏爱
-type Favorite struct {
-	Id				 	int		`json:"id"`
-	Course				*Course	`orm:"rel(fk)" json:"course"`
-	FavoriteType		string	`json:"favorite_type"`		// 偏爱类型：收藏(collect)、赞(praise)
-	UserName			string 	`json:"user_name"`
-}
-
-func DelFavorite(user_name string,course_id int,favorite_type string) {
-	o := orm.NewOrm()
-	o.QueryTable("favorite").Filter("user_name", user_name).Filter("course_id", course_id).
-		Filter("favorite_type", favorite_type).Delete()
-}
-func AddFavorite(user_name string,course_id int,favorite_type string) {
-	o := orm.NewOrm()
-	var favorite Favorite
-	var course Course
-	o.QueryTable("course").Filter("id",course_id).One(&course)
-	favorite.Course = &course
-	favorite.FavoriteType = favorite_type
-	favorite.UserName = user_name
-	o.Insert(&favorite)
-}
-
-func QueryFavorite(user_name string,course_id int,favorite_type string) (count int64, err error){
-	o := orm.NewOrm()
-	count, err = o.QueryTable("favorite").Filter("user_name", user_name).Filter("course_id", course_id).
-		Filter("favorite_type", favorite_type).Count()
-	return
-}
 
 func UpdateWatchNumber(course_id int) {
 	// 播放次数加 1

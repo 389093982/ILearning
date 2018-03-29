@@ -12,7 +12,7 @@
 #formbox #registsubmit.disabled{background-position:0 -36px;cursor:default!important;}
 #formbox .red{color:#ff0000;font-family:"宋体";font-weight:normal;}
 /* formbox */
-#formbox{margin:20px auto;width:300px;}
+#formbox{margin:0 auto;width:300px;}
 #formbox h3{font-size:16px;height:32px;color:#3366cc;font-weight:800;border-bottom:solid 1px #D1D1D1;margin:0 0 20px 0;padding:0 10px;}
 #formbox .item{padding-top:5px;height:75px;overflow:hidden;line-height:26px;}
 #formbox .area-item{padding-top:5px;height:190px;overflow:hidden;line-height:26px;}

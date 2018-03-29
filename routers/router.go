@@ -23,13 +23,16 @@ func init() {
 	beego.Router("/course/newcourse/uploadvedio",&controllers.CourseController{},"get,post:UploadVedio")
 	beego.Router("/course/newcourse/endUpdate",&controllers.CourseController{},"get,post:EndUpdate")
 	beego.Router("/course/queryCourseExist",&controllers.CourseController{},"get,post:QueryCourseExist")
-	beego.Router("/course/favorite/toggle",&controllers.CourseController{},"get,post:ToggleFavorite")
+	beego.Router("/common/toggle_favorite",&controllers.CommonController{},"get,post:ToggleFavorite")
 
 	beego.Router("/comment/topicTheme/filter",&controllers.CommentController{},"get,post:FilterTopicTheme")
 	beego.Router("/comment/topicReply/add",&controllers.CommentController{},"get,post:AddTopicReply")
 	beego.Router("/comment/topicReply/filter",&controllers.CommentController{},"get,post:FilterTopicReply")
 
 	beego.Router("/note/list",&controllers.NoteController{},"get,post:ListNote")
-	beego.Router("/note/add",&controllers.NoteController{},"get,post:AddNote")
 	beego.Router("/note/queryNoteExist",&controllers.NoteController{},"get,post:QueryNoteExist")
+	beego.Router("/note/queryNoteById",&controllers.NoteController{},"get,post:QueryNoteById")
+	beego.Router("/note/edit",&controllers.NoteController{},"get,post:CreateOrUpdateNote")
+	beego.Router("/note/view",&controllers.NoteController{},"get,post:ViewNote")
+	beego.Router("/note/collect_list",&controllers.NoteController{},"get,post:CollectList")
 }
