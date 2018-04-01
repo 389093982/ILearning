@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"ILearning/models"
+	"ILearning/ilearning/filter"
 )
 
 type CommonController struct {
@@ -23,3 +24,23 @@ func (this *CommonController) ToggleFavorite()  {
 	this.Data["json"] = &map[string]interface{}{"status": "SUCCESS"}
 	this.ServeJSON()
 }
+
+func (this *CommonController) CheckLoginUser()  {
+	if this.GetSession("UserName") != nil{
+		this.Data["json"] = &map[string]interface{}{"isLogin": true, "username": this.GetSession("UserName").(string)}
+	}else{
+		this.Data["json"] = &map[string]interface{}{"isLogin": false}
+	}
+	this.ServeJSON()
+}
+
+func (this *CommonController) Logout()  {
+	redirectUrl := this.GetString("redirectUrl")
+	filter.RedirectToLogout(this.Ctx, redirectUrl)
+}
+
+func (this *CommonController) Login()  {
+	redirectUrl := this.GetString("redirectUrl")
+	filter.RedirectToLogin(this.Ctx, redirectUrl)
+}
+

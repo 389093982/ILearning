@@ -1,20 +1,27 @@
 $(function () {
-    if(sessionStorage.username){
-        $(".login").html(sessionStorage.username);
-        $(".login").mouseenter(function(){
-            $(".login").html("注销");
-        });
-        $(".login").mouseleave(function(){
-            $(".login").html(sessionStorage.username);
-        });
-    }
+    $.ajax({
+        url:"/common/checkLoginUser",
+        type:"post",
+        success:function (data) {
+            if(data.isLogin == true){
+                $(".login").html(data.username);
+                $(".login").mouseenter(function(){
+                    $(".login").html("注销");
+                });
+                $(".login").mouseleave(function(){
+                    $(".login").html(data.username);
+                });
+            }
+        }
+    });
 
     $(".login").click(function () {
         var html = $(this).html();
         if(html == "注销"){
-            window.location.href = "/user/logout";
+            var redirectUrl = document.location.href;
+            window.location.href = "/common/logout?redirectUrl=" + redirectUrl;
         }else{
-            window.location.href = "/user/login";
+            window.location.href = "/common/login?redirectUrl=" + redirectUrl;
         }
     });
 })

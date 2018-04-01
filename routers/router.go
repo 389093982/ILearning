@@ -3,14 +3,21 @@ package routers
 import (
 	"ILearning/controllers"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/plugins/cors"
 )
 
 func init() {
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin",
+			"Access-Control-Allow-Headers", "Content-Type", "X-Requested-With"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
     beego.Router("/", &controllers.MainController{})
     beego.Router("/index", &controllers.MainController{},"get,post:Index")
-	beego.Router("/user/regist",&controllers.UserController{},"get,post:Regist")
-	beego.Router("/user/login",&controllers.UserController{},"get,post:Login")
-	beego.Router("/user/logout",&controllers.UserController{},"get,post:Logout")
+
 	beego.Router("/course/index",&controllers.CourseController{},"get,post:Index")
 	beego.Router("/course/queryCourse",&controllers.CourseController{},"get,post:QueryCourse")
 	beego.Router("/course/play",&controllers.CourseController{},"get,post:Play")
@@ -23,7 +30,11 @@ func init() {
 	beego.Router("/course/newcourse/uploadvedio",&controllers.CourseController{},"get,post:UploadVedio")
 	beego.Router("/course/newcourse/endUpdate",&controllers.CourseController{},"get,post:EndUpdate")
 	beego.Router("/course/queryCourseExist",&controllers.CourseController{},"get,post:QueryCourseExist")
+
 	beego.Router("/common/toggle_favorite",&controllers.CommonController{},"get,post:ToggleFavorite")
+	beego.Router("/common/checkLoginUser",&controllers.CommonController{},"get,post:CheckLoginUser")
+	beego.Router("/common/login",&controllers.CommonController{},"get,post:Login")
+	beego.Router("/common/logout",&controllers.CommonController{},"get,post:Logout")
 
 	beego.Router("/comment/topicTheme/filter",&controllers.CommentController{},"get,post:FilterTopicTheme")
 	beego.Router("/comment/topicReply/add",&controllers.CommentController{},"get,post:AddTopicReply")
