@@ -21,7 +21,7 @@ func init()  {
 }
 
 func LoginFilter(ctx *context.Context) {
-	if !IsWhiteUrl(ctx){			// 判断是否是白名单中的地址
+	if !IsWhiteUrl(ctx){				// 判断是否是白名单中的地址
 		var hasLogin bool
 		// 从 cookie 中获取 token
 		token := ctx.GetCookie("token")
