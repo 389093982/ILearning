@@ -60,8 +60,6 @@ func createTable() {
 }
 
 func main() {
-
 	beego.InsertFilter("/*",beego.BeforeExec, filter.LoginFilter)
-
 	beego.Run()
 }

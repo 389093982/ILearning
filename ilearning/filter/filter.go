@@ -12,11 +12,9 @@ import (
 	"strconv"
 )
 
-var aes_sso_key string
 var isoft_sso_url string
 
 func init()  {
-	aes_sso_key = beego.AppConfig.String("aes_sso_key")
 	isoft_sso_url = beego.AppConfig.String("isoft_sso_url")
 }
 
@@ -48,8 +46,6 @@ func LoginFilter(ctx *context.Context) {
 		}
 
 		if !hasLogin{
-			fmt.Print(ctx.Request.RequestURI)
-			fmt.Print(ctx.Request.URL.Path)
 			// 前去登录
 			RedirectToLogin(ctx, "")
 		}
