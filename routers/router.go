@@ -30,11 +30,15 @@ func init() {
 	beego.Router("/course/newcourse/uploadvedio",&controllers.CourseController{},"get,post:UploadVedio")
 	beego.Router("/course/newcourse/endUpdate",&controllers.CourseController{},"get,post:EndUpdate")
 	beego.Router("/course/queryCourseExist",&controllers.CourseController{},"get,post:QueryCourseExist")
+	beego.Router("/course/search",&controllers.CourseController{},"get,post:SearchCourse")
+	beego.Router("/course/coursetype/list",&controllers.CourseController{},"get,post:CourseTypeList")
+	beego.Router("/course/coursesubtype/list",&controllers.CourseController{},"get,post:CourseSubTypeList")
 
 	beego.Router("/common/toggle_favorite",&controllers.CommonController{},"get,post:ToggleFavorite")
 	beego.Router("/common/checkLoginUser",&controllers.CommonController{},"get,post:CheckLoginUser")
 	beego.Router("/common/login",&controllers.CommonController{},"get,post:Login")
 	beego.Router("/common/logout",&controllers.CommonController{},"get,post:Logout")
+	beego.Router("/common/query_configuration",&controllers.CommonController{},"get,post:QueryConfiguration")
 
 	beego.Router("/comment/topicTheme/filter",&controllers.CommentController{},"get,post:FilterTopicTheme")
 	beego.Router("/comment/topicReply/add",&controllers.CommentController{},"get,post:AddTopicReply")

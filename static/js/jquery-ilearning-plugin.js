@@ -39,8 +39,11 @@
                 $(".showListDataLeftArea ul").css("margin","1px");
                 $(".showListDataLeftArea a").css("line-height","28px");
                 $(".showListDataLeftArea span").css({"font-size":"14px","line-height":"28px"});
-                $(".showListDataRightAreaParent .showListDataRightSubArea li").css({"float":"left","display":"block","margin":"15px 5px 5px 5px"});
+                $(".showListDataRightAreaParent .showListDataRightSubArea li").css({"float":"left","display":"block","margin":"5px 5px 5px 5px"});
+                $(".showListDataRightAreaParent .showListDataRightSubArea li.nofloat").css({"float":"none"});
                 $(".showListDataRightAreaParent li span").css({"width":"20px","display":"inline-block","text-align":"center"});
+                $(".showListDataRightAreaParent li label").css({"font-weight":"bold"});
+                $(".showListDataRightAreaParent li hr").css({"margin": "0px"});
                 $(".showListDataRightAreaParent .showListDataRightSubArea").css({"background-color":"#f7f7f7","display":"none","width":"100%","height":"450px",
                     "border":"2px solid #ff5000","border-left":"none"});
                 $(".showListDataRightAreaParent .showListDataRightSubArea ul").css("list-style","none");
@@ -70,18 +73,22 @@
                 $(".showListData").find(".showListDataRightAreaParent").mouseleave(function (e) {
                     methods.checkChoose(e);
                 });
+                $(".showListDataRightSubArea a").click(function () {
+                    var search = $(this).html();
+                    window.location.href = "/course/search?search=" + search;
+                });
+                
             },
             initDataLeftUI:function (initDataJson) {
                 var leftHtml = "";
                 for(var i=0; i<initDataJson.length; i++){
                     var initDataJsonArr = initDataJson[i];
-                    var initDataJsonLeftArr = initDataJsonArr.left;
-                    var initDataJsonRightArr = initDataJsonArr.right;
+                    var left_item_arr = initDataJsonArr.left_items;
                     var appendHtml = "";
-                    for(var j=0; j<initDataJsonLeftArr.length; j++){
-                        var initDataJsonLeft = initDataJsonLeftArr[j];
-                        appendHtml += '<a href="' + initDataJsonLeft.href + '">&nbsp;' + initDataJsonLeft.label + '</a>';
-                        if(!(j == initDataJsonLeftArr.length - 1)){
+                    for(var j=0; j<left_item_arr.length; j++){
+                        var left_item = left_item_arr[j];
+                        appendHtml += '<a href="javascript:;">&nbsp;' + left_item + '</a>';
+                        if(!(j == left_item_arr.length - 1)){
                             appendHtml += '<span>&nbsp;/&nbsp;</span>';
                         }
                     }
@@ -92,27 +99,38 @@
             initDataRightUI:function (initDataJson) {
                 for(var i=0; i<initDataJson.length; i++){
                     var initDataJsonArr = initDataJson[i];
-                    var initDataJsonRightArr = initDataJsonArr.right;
+                    // 获取右边 div 所需要显示的内容
+                    var right_item_arr = initDataJsonArr.right_items;
                     var appendHtml = "";
-                    for(var j=0; j<initDataJsonRightArr.length; j++){
-                        var initDataJsonRight = initDataJsonRightArr[j];
-                        appendHtml += '<li><a href="' + initDataJsonRight.href + '">' + initDataJsonRight.label + '</a><span>|</span></li>';
+                    // 右边 div 分为 j 块
+                    for(var j=0; j<right_item_arr.length; j++){
+                        var right_item = right_item_arr[j];
+                        // 每块有个 label
+                        var right_item_label = right_item.label;
+                        appendHtml += "<li class='nofloat'><ul style='margin: 0px;'><label>" + right_item_label + "</label><hr/>";
+                        // 每块有多个子项
+                        var right_item_list = right_item.right_item_list;
+                        for(var k=0; k<right_item_list.length; k++){
+                            appendHtml += '<li><a href="javascript:;">' + right_item_list[k] + '</a><span>|</span></li>';
+                        }
+                        appendHtml += "<div style='clear: both;'></div></li></ul>";
                     }
                     var html = '<div class="showListDataRightSubArea" control="index_' + i + '""><ul>' + appendHtml + '</ul></div>';
                     $(".showListDataRightArea").append(html);
                 }
             },
-            initDataUI:function (url) {
+            initDataUI:function (url) {         // /static/json/course.json
                 $.ajax({
-                    async:false,
                     type: "GET",
                     url: url,
-                    dataType: "json",
-                    success: function(initDataJson){
-                        methods.initDataLeftUI(initDataJson);
-                        methods.initDataRightUI(initDataJson);
-                        methods.initDataEvent();
-                        methods.renderCss();
+                    success: function(data){
+                        if(data.status == "SUCCESS"){
+                            var configuration_value = JSON.parse(data.configuration.configuration_value);
+                            methods.initDataLeftUI(configuration_value);
+                            methods.initDataRightUI(configuration_value);
+                            methods.initDataEvent();
+                            methods.renderCss();
+                        }
                     }
                 });
             }
@@ -127,6 +145,6 @@
 })(jQuery);
 
 $(function () {
-    $(".showListData").showListData({"url":"/static/json/course.json"});
+    $(".showListData").showListData({"url":"/common/query_configuration?configuration_name=course_type"});
 });
 

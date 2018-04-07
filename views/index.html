@@ -23,6 +23,9 @@
     <div id="nav">
         {{template "search.html"}}
 
+        <input name="CourseTypeListShow" value="{{ .CourseTypeListShow }}" type="hidden"/>
+        {{template "course/course_type.html"}}
+
         <div class="showListData" style="width: 88%;margin: 5px auto;">
             <div class="showListDataLeftAreaParent" style="float:left;height: 450px;width: 20%;border: 2px solid #ff5000;">
                 <div class="showListDataLeftArea">

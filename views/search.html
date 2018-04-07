@@ -1,4 +1,15 @@
-<div data-am-sticky style="background:rgba(255,1,24,0.59);height: 60px;">
+<script>
+    $(function () {
+       $("#course_search input[type='submit']").click(function () {
+           var search = $("#course_search input[type='search']").val();
+           if(search.replace(/(^s*)|(s*$)/g, "").length > 0){
+               window.location.href="/course/search?search=" + search;
+           }
+       });
+    });
+</script>
+
+<div id="course_search" data-am-sticky style="background:rgba(255,1,24,0.59);height: 60px;">
     <div style="position: relative;top:10px;float: left;left: 320px;">
         <div id="_search">
             <input type="search" id="mq" name="q" value="" title="请输入搜索文字" accesskey="s" x-webkit-speech="" x-webkit-grammar="builtin:translate" autocomplete="off" placeholder="Java"

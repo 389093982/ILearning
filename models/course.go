@@ -28,6 +28,17 @@ type CourseVedio struct {
 	SecondPlay			string  `json:"second_play"`		// 第二存储/播放位置
 }
 
+func CourseSubTypeList(course_type string) (list orm.ParamsList, err error) {
+	o := orm.NewOrm()
+	_, err = o.QueryTable("course").Distinct().Filter("course_type",course_type).ValuesFlat(&list, "course_sub_type")
+	return
+}
+
+func CourseTypeList() (list orm.ParamsList, err error) {
+	o := orm.NewOrm()
+	_, err = o.QueryTable("course").Distinct().ValuesFlat(&list, "course_type")
+	return
+}
 
 func UpdateWatchNumber(course_id int) {
 	// 播放次数加 1
@@ -134,7 +145,13 @@ func QueryCourseById(id int) (course Course, err error)  {
 func QueryCourse(condArr map[string]string, page int, offset int) (courses []Course, counts int64, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("course")
-	cond := orm.NewCondition()
+	var cond = orm.NewCondition()
+
+	if _,ok:=condArr["search"];ok{
+		subCond := orm.NewCondition()
+		subCond = cond.And("course_type__contains", condArr["search"]).Or("course_sub_type__contains", condArr["search"])
+		cond = cond.AndCond(subCond)
+	}
 
 	if _,ok:=condArr["CourseAuthor"];ok{
 		cond = cond.And("CourseAuthor", condArr["CourseAuthor"])
@@ -145,7 +162,6 @@ func QueryCourse(condArr map[string]string, page int, offset int) (courses []Cou
 	counts,_ = qs.Count()
 
 	qs = qs.Limit(offset, (page - 1) * offset)
-	qs.All(&courses)
 	//for _, v := range querysOrder {
 	//	qs = qs.OrderBy(v)
 	//}

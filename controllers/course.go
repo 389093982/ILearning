@@ -25,6 +25,10 @@ func init(){
 	UploadFileSavePathVedio = beego.AppConfig.String("UploadFileSavePathVedio")
 }
 
+func (this *CourseController) SearchCourse()  {
+	search := this.GetString("search")
+	this.Redirect("/course/index?search=" + search, 302)
+}
 
 func (this *CourseController) ShowCourseDetail()  {
 	// 获取课程 id
@@ -48,6 +52,27 @@ func (this *CourseController) ShowCourseDetail()  {
 	this.Data["CourseVideo"] = cVedios
 	// 视频详情页面
 	this.TplName = "course_detail.html"
+}
+
+func (this *CourseController) CourseTypeList() {
+	list, err := models.CourseTypeList()
+	if err == nil{
+		this.Data["json"] = &map[string]interface{}{"status": "SUCCESS", "list": list}
+	}else{
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
+	}
+	this.ServeJSON()
+}
+
+func (this *CourseController) CourseSubTypeList() {
+	course_type := this.GetString("course_type")
+	list, err := models.CourseSubTypeList(course_type)
+	if err == nil{
+		this.Data["json"] = &map[string]interface{}{"status": "SUCCESS", "list": list}
+	}else{
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
+	}
+	this.ServeJSON()
 }
 
 func (this *CourseController) EndUpdate() {
@@ -254,6 +279,10 @@ func (this *CourseController) Play() {
 }
 
 func (this *CourseController) Index() {
+	search := this.GetString("search")
+	if(search != ""){
+		this.Data["Search"] = search
+	}
 	this.Data["ExpandExcCrse"] = this.GetString("expandExcCrse", "false")
 	this.TplName = "course.html"
 }
@@ -267,6 +296,10 @@ func (this *CourseController) QueryCourse() {
 		// filterType == "courselist" 时,查看当前登录用户已发布课程
 		condArr["CourseAuthor"] = this.Ctx.Input.Session("UserName").(string)
 	}else{
+		search := this.GetString("search")
+		if search != ""{
+			condArr["search"] = search
+		}
 		// 否则从请求参数中获取相关信息
 		CourseAuthor := this.GetString("CourseAuthor","")
 		CourseType := this.GetString("CourseType","")

@@ -10,6 +10,19 @@ type CommonController struct {
 	beego.Controller
 }
 
+
+func (this *CommonController) QueryConfiguration()  {
+	// 获取课程 id
+	configuration_name := this.GetString("configuration_name")
+	configuration,err := models.QueryConfiguration(configuration_name)
+	if err == nil{
+		this.Data["json"] = &map[string]interface{}{"status": "SUCCESS", "configuration": configuration}
+	}else{
+		this.Data["json"] = &map[string]interface{}{"status": "ERROR"}
+	}
+	this.ServeJSON()
+}
+
 func (this *CommonController) ToggleFavorite()  {
 	// 获取课程 id
 	favorite_id, _ := this.GetInt("favorite_id")

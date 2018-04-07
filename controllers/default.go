@@ -8,12 +8,16 @@ type MainController struct {
 	beego.Controller
 }
 
-func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "index.tpl"
+func (this *MainController) Get() {
+	this.Data["Website"] = "beego.me"
+	this.Data["Email"] = "astaxie@gmail.com"
+	this.TplName = "index.tpl"
 }
 
-func (c *MainController) Index()  {
-	c.TplName = "index.html"
+func (this *MainController) Index()  {
+	coursetypelist := this.GetString("coursetypelist")
+	if(coursetypelist == "coursetypelist"){
+		this.Data["CourseTypeListShow"] = "CourseTypeListShow"
+	}
+	this.TplName = "index.html"
 }

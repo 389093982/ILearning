@@ -49,24 +49,30 @@ function bindPopoverEvent() {
 }
 
 function loadCourse() {
+    var search = $("input[name='_course_search']").val();
     $.ajax({
         url:"/course/queryCourse",
         type:"post",
-        data:{"offset":15},
+        data:{"offset":15, "search":search},
         success:function (data) {
             var jsonObj = $.parseJSON(data);
-            new Vue({
-                // 修改 vue 默认分隔符,解决冲突问题
-                delimiters: ['[[', ']]'],
-                el: '#vedio',
-                data: {
-                    courses: jsonObj.courses
-                }
-            });
-            // 缓存数据在 document 上面
-            $(document).data("courses", jsonObj.courses);
-            // 绑定 popover 事件
-            bindPopoverEvent();
+            if(jsonObj.courses.length > 0){
+                $(".not_found_course").hide();
+                new Vue({
+                    // 修改 vue 默认分隔符,解决冲突问题
+                    delimiters: ['[[', ']]'],
+                    el: '#vedio',
+                    data: {
+                        courses: jsonObj.courses
+                    }
+                });
+                // 缓存数据在 document 上面
+                $(document).data("courses", jsonObj.courses);
+                // 绑定 popover 事件
+                bindPopoverEvent();
+            }else{
+                $(".not_found_course").show();
+            }
         }
     });
 }
