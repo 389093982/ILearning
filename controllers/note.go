@@ -24,7 +24,6 @@ func (this *NoteController) ViewNote()  {
 	if err == nil{
 		note,_ := models.QueryNoteById(note_id)
 		this.Data["Note"] = &note
-		this.Data["NoteContent"] = note.NoteContent.String()
 		this.Data["NoteCollect"] = models.IsFavorite(user_name, note_id, "note_collect")
 		this.TplName = "note/note_view.html"
 	}
@@ -46,6 +45,15 @@ func (this *NoteController) QueryNoteExist()  {
 		this.Data["json"] = &map[string]interface{}{"flag": false}
 	}
 	this.ServeJSON()
+}
+
+func (this *NoteController) QueryNoteHtmlById()  {
+	note_id,err := this.GetInt("note_id")
+	if err == nil{
+		note,_ := models.QueryNoteById(note_id)
+		this.Data["NoteContent"] = note.NoteContent.String()
+	}
+	this.TplName = "note/note_iframe.html"
 }
 
 func (this *NoteController) QueryNoteById()  {

@@ -5,6 +5,31 @@
             ShowAllCourseType();
         }
     })
+    
+    function showCourseSubType(node) {
+        var course_type = $(node).html();
+        $.ajax({
+            url:"/course/coursesubtype/list",
+            method:"post",
+            data:{"course_type":course_type},
+            success:function (data) {
+                if(data.status == "SUCCESS"){
+                    var courseSubTypeList = data.list;
+                    // 先进行清空
+                    $("#course_sub_type_area").html("");
+                    // 再进行拼接
+                    for(var i=0; i<courseSubTypeList.length; i++){
+                        $("#course_sub_type_area").append("<a href='javascript:;' style='margin-right: 10px;'>" + courseSubTypeList[i] + "</a>");
+                    }
+                    // 再绑定事件
+                    $("#course_sub_type_area a").click(function () {
+                        var course_sub_type = $(this).html();
+                        window.location.href = "/course/search?search=" + course_sub_type;
+                    });
+                }
+            }
+        });
+    }
 
     function ShowAllCourseType(){
         if($("#course_type_list").is(":hidden")){
@@ -22,34 +47,12 @@
                     if(data.status == "SUCCESS"){
                         var courseTypeList = data.list;
                         for(var i=0; i<courseTypeList.length; i++){
-                            $("#course_type_area").append("<a href='javascript:;' style='margin-right: 10px;color:red;'>" + courseTypeList[i] + "</a>");
+                            $("#course_type_area").append("<a href='javascript:;' style='margin-right: 10px;color:red;' " +
+                                    "onclick='showCourseSubType(this)'>" + courseTypeList[i] + "</a>");
                         }
                         $(document).data("coursetypelist", courseTypeList);
-
-                        $("#course_type_area a").click(function () {
-                            var course_type = $(this).html();
-                            $.ajax({
-                                url:"/course/coursesubtype/list",
-                                method:"post",
-                                data:{"course_type":course_type},
-                                success:function (data) {
-                                    if(data.status == "SUCCESS"){
-                                        var courseSubTypeList = data.list;
-                                        // 先进行清空
-                                        $("#course_sub_type_area").html("");
-                                        // 再进行拼接
-                                        for(var i=0; i<courseSubTypeList.length; i++){
-                                            $("#course_sub_type_area").append("<a href='javascript:;' style='margin-right: 10px;'>" + courseSubTypeList[i] + "</a>");
-                                        }
-                                        // 再绑定事件
-                                        $("#course_sub_type_area a").click(function () {
-                                            var course_sub_type = $(this).html();
-                                            window.location.href = "/course/search?search=" + course_sub_type;
-                                        });
-                                    }
-                                }
-                            });
-                        });
+                        // 默认触发第一个超链接点击事件
+                        showCourseSubType($("#course_type_area a:first")[0]);
                     }
                 }
             });
@@ -61,7 +64,7 @@
     <a href="javascript:;" onclick="ShowAllCourseType()" style="color:red;">查看更多课程分类 >></a>
     <div id="course_type_list" style="display: none;border:2px solid #b3d5a8;min-height: 150px;padding:10px;">
         <div id="course_type_area"></div>
-        <hr>
+        <hr style="margin: 5px;">
         <div id="course_sub_type_area"></div>
     </div>
 </div>

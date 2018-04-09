@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
+	"strings"
 )
 
 type Course struct {
@@ -158,13 +159,19 @@ func QueryCourse(condArr map[string]string, page int, offset int) (courses []Cou
 		//.Filter("username",user.Username).Where(where).Limit(strconv.Itoa(p.Offset()), strconv.Itoa(pagesize)).Order(`op.id desc`).Select()
 	}
 
+	if _,ok:=condArr["querysOrder"];ok{
+		querysOrder := condArr["querysOrder"]
+		// 多个排序条件使用 @ 符号进行分割
+		querysOrderArr := strings.Split(querysOrder, "@")
+		for _, v := range querysOrderArr {
+			qs = qs.OrderBy(v)
+		}
+	}
+
 	qs = qs.SetCond(cond)
 	counts,_ = qs.Count()
 
 	qs = qs.Limit(offset, (page - 1) * offset)
-	//for _, v := range querysOrder {
-	//	qs = qs.OrderBy(v)
-	//}
 	qs.All(&courses)
 	return
 }

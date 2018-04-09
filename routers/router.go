@@ -47,6 +47,7 @@ func init() {
 	beego.Router("/note/list",&controllers.NoteController{},"get,post:ListNote")
 	beego.Router("/note/queryNoteExist",&controllers.NoteController{},"get,post:QueryNoteExist")
 	beego.Router("/note/queryNoteById",&controllers.NoteController{},"get,post:QueryNoteById")
+	beego.Router("/note/queryNoteHtmlById",&controllers.NoteController{},"get,post:QueryNoteHtmlById")
 	beego.Router("/note/edit",&controllers.NoteController{},"get,post:CreateOrUpdateNote")
 	beego.Router("/note/view",&controllers.NoteController{},"get,post:ViewNote")
 	beego.Router("/note/collect_list",&controllers.NoteController{},"get,post:CollectList")

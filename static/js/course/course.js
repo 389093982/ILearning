@@ -6,14 +6,15 @@ $(function () {
 
 function bindPopoverEvent() {
     $('#vedio li').each(function (index) {
-        $(this).webuiPopover({
+        var liNode = this;
+        $(liNode).webuiPopover({
             title:function () {
-                return $(this).parent().find(".title").html();
+                return $(liNode).parent().find(".title").html();
             },
             content:function () {
                 // 获取课程技术
-                var course_id = $(this).parent().find(".content").attr("course_id");
-                var course_number = $(this).parent().find(".content").attr("course_number");
+                var course_id = $(liNode).parent().find(".content").attr("course_id");
+                var course_number = $(liNode).parent().find(".content").attr("course_number");
                 // 获取 html
                 var html = $(this).parent().find(".content").html();
                 // 替换集数信息

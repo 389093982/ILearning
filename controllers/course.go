@@ -289,7 +289,8 @@ func (this *CourseController) Index() {
 
 func (this *CourseController) QueryCourse() {
 	condArr := make(map[string]string)
-	offset,_ := this.GetInt("offset", 10)	// 每页记录数
+	offset,_ := this.GetInt("offset", 10)				// 每页记录数
+	current_page,_ := this.GetInt("current_page",1)	// 当前页
 
 	filterType := this.GetString("filterType","")
 	if filterType == "courselist"{
@@ -310,7 +311,7 @@ func (this *CourseController) QueryCourse() {
 			condArr["CourseType"] = CourseType
 		}
 	}
-	courses, count, err := models.QueryCourse(condArr, 1, offset)
+	courses, count, err := models.QueryCourse(condArr, current_page, offset)
 	paginator := pagination.SetPaginator(this.Ctx, offset, count)
 
 	//初始化

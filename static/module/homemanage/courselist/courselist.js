@@ -1,22 +1,85 @@
 $(function () {
-    $.ajax({
-        url:"/course/queryCourse?filterType=courselist",
-        method:"post",
-        data:{},
-        async: false,   // 执行完了之后在执行 modalEffects.js 中的渲染
-        success:function (data) {
-            var obj = JSON.parse(data);
-            new Vue({
-                // 修改 vue 默认分隔符,解决冲突问题
-                delimiters: ['[[', ']]'],
-                el: '#course_list',
-                data: {
-                    courses: obj.courses
-                }
-            });
-            renderStar();
-        }
+    // 定义一个全局的 vueData,初始数据为空
+    var courseVueData = {
+        courses:[]
+    };
+    // 定义一个全局的 vue 实例,引用这个全局的 vueData
+    var courseVue = new Vue({
+        // 修改 vue 默认分隔符,解决冲突问题
+        delimiters: ['[[', ']]'],
+        el: '#course_list',
+        data: courseVueData
     });
+
+    function pageToolFunction(obj) {
+        // 渲染分页信息
+        $('#pageTool').Paging({pagesize: obj.paginator.pagesize,count:obj.paginator.totalcount,current:1,callback:function(page,size,count){
+                loadPageData(page, size, null);
+            }});
+    }
+
+    function loadPageData(current_page,page_size,pageToolFunction) {
+        $.ajax({
+            url:"/course/queryCourse?filterType=courselist&current_page=" + current_page + "&offset=" + page_size,
+            method:"get",
+            async: false,   // 执行完了之后在执行 modalEffects.js 中的渲染,已经被 $nextTick 更优方式取代
+            success:function (data) {
+                var obj = JSON.parse(data);
+                // 使用 $set 去修改这个 vueData 进行刷新页面
+                courseVue.$set(courseVueData, 'courses', obj.courses);
+                // $nextTick 是在下次 DOM 更新循环结束之后执行延迟回调，在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
+                courseVue.$nextTick(function () {
+                    var modal = new ModalEffects();     // 渲染弹出层
+                    modal.init();
+                })
+                renderStar();                           // 渲染评分星级
+                if(pageToolFunction != null){
+                    pageToolFunction(obj);              // 渲染分页
+                }
+            }
+        });
+    }
+    // $.ajax({
+    //     url:"/course/queryCourse?filterType=courselist",
+    //     method:"get",
+    //     async: false,   // 执行完了之后在执行 modalEffects.js 中的渲染,已经被 $nextTick 更优方式取代
+    //     success:function (data) {
+    //         var obj = JSON.parse(data);
+    //         // 使用 $set 去修改这个 vueData 进行刷新页面
+    //         courseVue.$set(courseVueData, 'courses', obj.courses);
+    //         // $nextTick 是在下次 DOM 更新循环结束之后执行延迟回调，在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
+    //         courseVue.$nextTick(function () {
+    //             var modal = new ModalEffects();
+    //             modal.init();
+    //         })
+    //         renderStar();
+    //
+    //
+    //         // 渲染分页信息
+    //         $('#pageTool').Paging({pagesize: obj.paginator.pagesize,count:obj.paginator.totalcount,current:1,callback:function(page,size,count){
+    //             // alert('当前第 ' +page +'页,每页 '+size+'条,总页数：'+count+'页');
+    //             $.ajax({
+    //                 url:"/course/queryCourse?filterType=courselist&current_page=" + page + "&offset=" + size,
+    //                 method:"get",
+    //                 async: false,   // 执行完了之后在执行 modalEffects.js 中的渲染,已经被 $nextTick 更优方式取代
+    //                 success:function (data) {
+    //                     var obj = JSON.parse(data);
+    //                     // 使用 $set 去修改这个 vueData 进行刷新页面
+    //                     courseVue.$set(courseVueData, 'courses', obj.courses);
+    //                     // $nextTick 是在下次 DOM 更新循环结束之后执行延迟回调，在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
+    //                     courseVue.$nextTick(function () {
+    //                         var modal = new ModalEffects();
+    //                         modal.init();
+    //                     })
+    //                     renderStar();
+    //                 }
+    //             });
+    //         }});
+    //     }
+    // });
+
+    // 加载第一页,10条记录,加载完成之后使用 pageToolFunction 函数进行分页渲染
+    loadPageData(1,10,pageToolFunction);
 });
 
 // html5 实现图片预览功能

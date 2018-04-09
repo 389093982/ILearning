@@ -53,70 +53,26 @@
                         <div style="background-color: #f6f6f6;height: 38px;border: 1px solid #ccc;">
                             <h5 style="margin-left: 20px;">热门推荐</h5>
                         </div>
-                        <div style="background: #ffffff;">
+                        <div style="background: #ffffff;padding: 30px;padding-top: 5px;">
                             <ul id="_hot_recommend_ul">
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
-                                <li style="float: left;padding: 10px 9px 0;width: 120px;height: 110px;overflow: hidden;text-align: center;position: relative;">
-                                    <a href="#" style="text-align: center;">
-                                        <img src="/static/img/a.png";>
-                                        <p>AAAAAA</p>
-                                    </a>
-                                </li>
+                                {{range .Recommends}}
+                                    <li style="float: left;padding: 10px 9px 0;width: 140px;height: 125px;overflow: hidden;
+                                        text-align: center;position: relative;">
+                                        <a href="javascript:;" style="text-align: center;"
+                                            onclick="window.location.href='/course/showCourseDetail?id={{.Id}}'">
+                                            <img src="{{.SmallImage}}" height="90px" width="120px" onerror="javascript:this.src='/static/img/a.png';"/>
+                                            <p>{{.CourseShortDes}}</p>
+                                        </a>
+                                    </li>
+                                {{end}}
                             </ul>
                             <div style="clear: both;"></div>
                         </div>
                     </div>
                     <div style="width: 30%;background: red;float: left;">
                         <div style="background-color: #f6f6f6;height: 38px;border: solid 1px #d9d9d9;">
-                            <h5 style="float: left;margin-left: 20px;">新闻公告</h5>
-                            <a href="#" style="float: right;line-height: 38px;margin-right: 20px;">更多>></a>
+                            <h5 style="float: left;line-height: 38px;margin-left: 20px;">新闻公告</h5>
+                            <a href="#" style="float: right;line-height: 38px;margin-right: 20px;color: red;">更多>></a>
                         </div>
                         <div style="background: #ffffff;font-size: 14px;padding-bottom: 10px;">
                             <ul style="padding-left: 0em;">
@@ -149,8 +105,8 @@
                     </div>
                     <div style="width: 30%;background: red;float: left;">
                         <div style="background-color: #f6f6f6;height: 38px;border: solid 1px #d9d9d9;">
-                            <h5 style="float: left;margin-left: 20px;">热门问题</h5>
-                            <a href="#" style="float: right;line-height: 38px;margin-right: 20px;">我要提问</a>
+                            <h5 style="float: left;line-height: 38px;margin-left: 20px;">热门问题</h5>
+                            <a href="#" style="float: right;line-height: 38px;margin-right: 20px;color: red;">我要提问>></a>
                         </div>
                         <div style="background: #ffffff;font-size: 14px;padding-bottom: 10px;">
                             <ul style="padding-left: 0em;">
@@ -191,18 +147,16 @@
 
                 <div id="_fun_time" style="width: 100%;float: left;border: 1px solid #b3d5a8;border-radius: 4px;margin-top: 20px;">
                     <div style="height: 30px;background: #eeffd9;">
-                        <a href="#" style="font-weight: bold;color: #448230;line-height: 30px;margin-left: 10px;">如何快速赚取积分？</a>
+                        <a href="javascript:;" style="font-weight: bold;color: #448230;line-height: 30px;margin-left: 10px;">站点引导</a>
                     </div>
                     <div>
                         <div style="min-height: 100px;border: 1px solid #b3d5a8;padding: 20px;">
-                            <p style="color: red;">1. 开通会员</p>
-                            <p> * 首次开通会员赠送 150 会员积分</p>
-                            <p> * 会员每天登陆赠送 5 会员积分</p>
-                            <p> * 会员每天可额外赠送他人 10 积分</p>
-                            <p> * 查看<a href="#" style="color: red;">我的积分</a>情况</p>
+                            <p style="color: red;">版权说明</p>
+                            <p> * 本站点所有学习视频及学习资料所有权归视频创作者拥有</p>
+                            <p> * 未经许可禁止转载分发任何未授权的学习视频及学习资料</p>
                         </div>
                         <div style="min-height: 100px;border: 1px solid #b3d5a8;padding: 20px;">
-                            <p style="color: red;">2. 开课赚取积分</p>
+                            <p style="color: red;">我也想当老师</p>
                             <p>
                                 查看 <a style="color: red;" href="javascript:void(0);" onclick="$('#teacher_qualification_guidance').toggleClass('hide')">开课流程</a><br>
                             </p>
@@ -210,12 +164,9 @@
                                 {{template "teacher_qualification_guidance.html"}}
                             </div>
                             <p>
-                                已有开课认证资格，<a style="color: red;" href="/course/homemanage">立即开课</a>
+                                已有开课认证资格，<a style="color: red;" href="/course/newcourse">立即开课</a>
                             </p>
                         </div>
-                    </div>
-                    <div style="min-height: 200px;border: 1px solid #b3d5a8;">
-                        3. 关于版权的几点声明
                     </div>
                 </div>
             </div>
